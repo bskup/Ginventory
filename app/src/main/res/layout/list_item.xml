@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for a single list item in the list of inventory items -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/list_item_margin"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_view_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.87"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:textSize="22sp"
+                tools:text="Test Item Name"/>
+
+            <LinearLayout
+                android:id="@+id/linear_layout_summary_and_price_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/text_view_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.50"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="2"
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    tools:text="40oz Beer - United States"/>
+
+                <TextView
+                    android:id="@+id/text_view_price_bubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.87"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:textAllCaps="true"
+                    android:textSize="12sp"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rounded_corner_text_view"
+                    tools:text="$4.99"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/text_view_big_font_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="22sp"
+                tools:text="26"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0.5"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="In Stock"
+                android:textAllCaps="true"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_whole_bottom_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/list_item_margin"
+        android:layout_marginRight="@dimen/list_item_margin"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/linear_layout_view_image_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/list_item_margin"
+            android:paddingRight="@dimen/list_item_margin"
+            android:paddingTop="@dimen/list_item_margin">
+
+            <ImageView
+                android:id="@+id/image_view_theme_dependent_view_photo_icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:alpha="0.50"
+                android:src="?attr/theme_dependent_view_photo_icon"/>
+
+            <TextView
+                android:id="@+id/text_view_view_image_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="4dp"
+                android:alpha="0.50"
+                android:fontFamily="sans-serif"
+                android:text="View Image"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                tools:text="View Image"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_quantity_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/image_view_theme_dependent_arrow_down_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:alpha="0.50"
+                android:padding="8dp"
+                android:src="?attr/theme_dependent_down_arrow_icon"/>
+
+            <TextView
+                android:id="@+id/text_view_quantity_label_only"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:alpha="0.50"
+                android:fontFamily="sans-serif"
+                android:padding="@dimen/list_item_margin"
+                android:text="Quantity"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                tools:text="Quantity"/>
+
+            <ImageView
+                android:id="@+id/image_view_theme_dependent_arrow_up_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:alpha="0.50"
+                android:padding="@dimen/list_item_margin"
+                android:src="?attr/theme_dependent_up_arrow_icon"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_layout_order_more_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/list_item_margin"
+            android:paddingLeft="@dimen/list_item_margin"
+            android:paddingTop="@dimen/list_item_margin">
+
+            <TextView
+                android:id="@+id/text_view_test3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="4dp"
+                android:alpha="0.50"
+                android:fontFamily="sans-serif"
+                android:text="Order more"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                tools:text="Order More"/>
+
+            <ImageView
+                android:id="@+id/image_view_theme_dependent_order_more_icon"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:alpha="0.50"
+                android:src="?attr/theme_dependent_call_icon"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

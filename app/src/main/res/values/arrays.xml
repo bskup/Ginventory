@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Options displayed in the spirit type drop-down Spinner -->
+    <string-array name="array_spirit_type_options">
+        <item>@string/spirit_type_unknown</item>
+        <item>@string/spirit_type_beer</item>
+        <item>@string/spirit_type_brandy</item>
+        <item>@string/spirit_type_champagne</item>
+        <item>@string/spirit_type_cognac</item>
+        <item>@string/spirit_type_gin</item>
+        <item>@string/spirit_type_liqeur</item>
+        <item>@string/spirit_type_rum</item>
+        <item>@string/spirit_type_tequila</item>
+        <item>@string/spirit_type_vermouth</item>
+        <item>@string/spirit_type_whiskey</item>
+        <item>@string/spirit_type_wine</item>
+    </string-array>
+    <!-- Options displayed in the size type drop-down Spinner -->
+    <string-array name="array_size_type_options">
+        <item>@string/size_type_ml</item>
+        <item>@string/size_type_oz</item>
+        <item>@string/size_type_pack</item>
+    </string-array>
+    <!-- Options displayed in Theme section of settings -->
+    <string-array name="settings_theme_labels">
+        <item>@string/settings_theme_light_label</item>
+        <item>@string/settings_theme_dark_label</item>
+    </string-array>
+    <!-- Values corresponding to theme options in settings -->
+    <string-array name="settings_theme_values">
+        <item>@string/settings_theme_light_value</item>
+        <item>@string/settings_theme_dark_value</item>
+    </string-array>
+</resources>

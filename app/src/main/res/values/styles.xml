@@ -1,0 +1,66 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppThemeLight" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="theme_dependent_view_photo_icon" >@drawable/ic_view_photo_black</item>
+        <item name="theme_dependent_down_arrow_icon" >@drawable/selector_arrow_down_black</item>
+        <item name="theme_dependent_up_arrow_icon" >@drawable/selector_arrow_up_black</item>
+        <item name="theme_dependent_call_icon" >@drawable/ic_call_black</item>
+        <item name="theme_dependent_view_photo_full_size_icon" >@drawable/ic_view_photo_full_size_black</item>
+        <item name="theme_dependent_delete_photo_icon" >@drawable/ic_delete_photo_black</item>
+    </style>
+    <!-- Dark app theme. -->
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="theme_dependent_view_photo_icon" >@drawable/ic_view_photo_white</item>
+        <item name="theme_dependent_down_arrow_icon" >@drawable/selector_arrow_down_white</item>
+        <item name="theme_dependent_up_arrow_icon" >@drawable/selector_arrow_up_white</item>
+        <item name="theme_dependent_call_icon" >@drawable/ic_call_white</item>
+        <item name="theme_dependent_view_photo_full_size_icon" >@drawable/ic_view_photo_full_size_white</item>
+        <item name="theme_dependent_delete_photo_icon" >@drawable/ic_delete_photo_white</item>
+    </style>
+
+    <!-- Theme of the editor -->
+    <style name="EditorTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/editorColorPrimary</item>
+        <item name="colorPrimaryDark">@color/editorColorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Style for a category in the editor -->
+    <style name="CategoryStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+    <!-- Style for an EditText field in the editor -->
+    <style name="EditorFieldStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+    <!-- Style for the measurement units for an EditText field in the editor -->
+    <style name="EditorUnitsStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+    </style>
+
+</resources>

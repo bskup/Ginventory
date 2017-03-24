@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="theme_dependent_view_photo_icon" format="reference"/>
+    <attr name="theme_dependent_down_arrow_icon" format="reference"/>
+    <attr name="theme_dependent_up_arrow_icon" format="reference"/>
+    <attr name="theme_dependent_call_icon" format="reference"/>
+    <attr name="theme_dependent_view_photo_full_size_icon" format="reference" />
+    <attr name="theme_dependent_delete_photo_icon" format="reference" />
+</resources>
