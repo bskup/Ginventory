@@ -13,8 +13,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
@@ -47,9 +47,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static android.R.attr.screenDensity;
-import static java.security.AccessController.getContext;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -501,8 +498,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     // Override method that takes action based on result of asking user for permissions
+    // Added @NonNull annotations to get rid of error about non annotated parameter overriding
+    // @NonNull parameter
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_REQUEST_CAMERA_AND_EXTERNAL_STORAGE) {
             // If over sdk 18 only check for camera permission
             if (android.os.Build.VERSION.SDK_INT > 18 && (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
@@ -759,7 +758,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     // Helper method to get user input from editor and save new item into database
-    private void saveItem() {
+    // Returns true if save successful or false if unsuccessful
+    private boolean saveItem() {
         // Read from input fields
         // Use trim to eliminate leading or trailing white space
         String nameString = mNameEditText.getText().toString().trim();
@@ -772,91 +772,127 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneNumberString = mSupplierPhoneNumberEditText.getText().toString().trim();
 
-        // Before creating contentvalues, check if all fields are empty and spirit type unknown
-        // TODO supplier
+        // Before creating ContentValues, check if all fields are empty and spirit type unknown
         if (TextUtils.isEmpty(nameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(sizeString)
                 && TextUtils.isEmpty(originString) && TextUtils.isEmpty(abvString)
                 && TextUtils.isEmpty(purchasePriceString) && TextUtils.isEmpty(salePriceString)
                 && TextUtils.isEmpty(supplierNameString) && TextUtils.isEmpty(supplierPhoneNumberString)
                 && mSpiritType == ItemEntry.SPIRIT_TYPE_UNKNOWN) {
-            // If all fields are empty, don't do anything else
-            return;
+            // If all fields are empty, return true as if we saved successfully so it
+            // triggers finish() from onOptionsItemSelected and closes activity
+            return true;
         }
 
         // Create a ContentValues object where column names are the keys,
         // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
 
-        // TODO instead of setting to some default value, if empty dont allow saving
-        // Set name initially to "Unknown when saving" if its left blank by user, otherwise parse it from
+        // TODO covered empty case, now do invalid input type
+        // Set error msg if name left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         String name;
         if (TextUtils.isEmpty(nameString)) {
-            name = "Unknown name when saving";
+            mNameEditText.setError("Item name is required.");
+            // Request focus so error message is automatically displayed
+            mNameEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             name = nameString;
         }
-        // Set quantity initially to 0 if its left blank by user, otherwise parse it from
+        // Set error msg if quantity left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         int quantity;
         if (TextUtils.isEmpty(quantityString)) {
-            quantity = 0;
+            mQuantityEditText.setError("Quantity is required.");
+            // Request focus so error message is automatically displayed
+            mQuantityEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             quantity = Integer.parseInt(quantityString);
         }
-        // Set origin initially to "Unknown when saving" if its left blank by user, otherwise parse it from
+        // Set error msg if origin left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         String origin;
         if (TextUtils.isEmpty(originString)) {
-            origin = "Unknown origin when saving";
+            mOriginEditText.setError("Country of origin is required.");
+            // Request focus so error message is automatically displayed
+            mQuantityEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             origin = originString;
         }
-        // Set size initially to 0 if its left blank by user, otherwise parse it from
+        // Set error msg if size left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         int size;
         if (TextUtils.isEmpty(sizeString)) {
-            size = 0;
+            mSizeEditText.setError("Item size is required.");
+            // Request focus so error message is automatically displayed
+            mSizeEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             size = Integer.parseInt(sizeString);
         }
-        // Set abv% initially to 0 if its left blank by user, otherwise parse it from
+        // Set error msg if abv left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         int abv;
         if (TextUtils.isEmpty(abvString)) {
-            abv = 0;
+            mAbvEditText.setError("ABV% is required.");
+            // Request focus so error message is automatically displayed
+            mAbvEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             abv = Integer.parseInt(abvString);
         }
-        // Set purchase price initially to 0 if its left blank by user, otherwise parse it from
+        // Set error msg if purchase price left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         int purchasePrice;
         if (TextUtils.isEmpty(purchasePriceString)) {
-            purchasePrice = 0;
+            mPurchasePriceEditText.setError("Purchase price is required.");
+            // Request focus so error message is automatically displayed
+            mPurchasePriceEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             purchasePrice = Integer.parseInt(purchasePriceString);
         }
-        // Set sale price initially to 0 if its left blank by user, otherwise parse it from
+        // Set error msg if sale price left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         int salePrice;
         if (TextUtils.isEmpty(salePriceString)) {
-            salePrice = 0;
+            mSalePriceEditText.setError("Sale price is required.");
+            // Request focus so error message is automatically displayed
+            mSalePriceEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             salePrice = Integer.parseInt(salePriceString);
         }
-        // Set supplier name initially to "Unknown when saving" if its left blank by user, otherwise parse it from
+        // Set error msg if supplier name left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         String supplierName;
         if (TextUtils.isEmpty(supplierNameString)) {
-            supplierName = "Unknown supplier name when saving";
+            mSupplierNameEditText.setError("Supplier name is required.");
+            // Request focus so error message is automatically displayed
+            mSupplierNameEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             supplierName = supplierNameString;
         }
-        // Set supplier phone number initially to 0 if its left blank by user, otherwise parse it from
+        // Set error msg if supplier phone number left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         long supplierPhoneNumber;
         if (TextUtils.isEmpty(supplierPhoneNumberString)) {
-            supplierPhoneNumber = 0;
+            mSupplierPhoneNumberEditText.setError("Supplier phone number is required.");
+            // Request focus so error message is automatically displayed
+            mSupplierPhoneNumberEditText.requestFocus();
+            // Return without saving
+            return false;
         } else {
             // Remove everything except numbers before saving
             // Regex [^0-9] = "not 0-9" so everything but those we replace with "" or nothing
@@ -890,6 +926,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             if (rowsUpdated == 0) {
                 // If no rows updated, there was an error with update
                 Toast.makeText(this, "Error with update", Toast.LENGTH_SHORT).show();
+                return false;
             } else {
                 // Otherwise, the update was successful and we can display a success toast
                 Toast.makeText(this, "Update successful", Toast.LENGTH_SHORT).show();
@@ -903,6 +940,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             if (newUri == null) {
                 // If the uri is null, there was an error with insertion
                 Toast.makeText(this, R.string.editor_insert_item_error, Toast.LENGTH_SHORT).show();
+                return false;
             } else {
                 // Otherwise, the insertion was successful and we can display a success toast
                 Toast.makeText(this, R.string.editor_insert_item_success, Toast.LENGTH_SHORT).show();
@@ -913,6 +951,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentPhotoPath = null;
         mCurrentPhotoFile = null;
         mCurrentPhotoUri = null;
+
+        // If we made it this far without returning false, must have saved successfully
+        return true;
     }
 
     // Helper method to perform deletion of an item from the database
@@ -962,9 +1003,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
                 // Save item to database
-                saveItem();
-                // Exit activity
-                finish();
+                boolean didItSave = saveItem();
+                if (didItSave) {
+                    // Exit activity
+                    finish();
+                }
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
