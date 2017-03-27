@@ -159,10 +159,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         // Show a toast message depending on whether or not the delete was successful
         if (rowsDeleted == 0) {
             // If no rows deleted, there was an error with delete
-            Toast.makeText(this, "Error with delete", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.delete_failed, Toast.LENGTH_SHORT).show();
         } else {
             // Otherwise, the delete was successful and we can display a success toast
-            Toast.makeText(this, "Delete successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.delete_successful, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -115,12 +115,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnClickListener mOpenFullSizePhotoClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            // Do this when "view full size" imageview is clicked
+            // Do this when "view full size" ImageView is clicked
             // If photo path string is not null, there is a photo, create intent and view it
             Log.v(LOG_TAG, "photoPath onClick in EditorActivity view full size: " + mCurrentPhotoPath);
             if (mCurrentPhotoPath != null) {
                 File photoFile = new File(mCurrentPhotoPath);
-                Uri photoUri = FileProvider.getUriForFile(v.getContext(), "com.bskup.ginventory.fileprovider", photoFile);
+                Uri photoUri = FileProvider.getUriForFile(v.getContext(), v.getContext().getString(R.string.file_provider_path), photoFile);
                 Log.v(LOG_TAG, "photoUri : " + photoUri);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(photoUri, "image/*");
@@ -146,13 +146,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Create an AlertDialog.Builder and set the message, and click listeners
                 // for the positive and negative buttons on the dialog
                 AlertDialog.Builder deletePhotoBuilder = new AlertDialog.Builder(v.getContext());
-                deletePhotoBuilder.setMessage("Are you sure you want to delete this photo?");
+                deletePhotoBuilder.setMessage(R.string.delete_photo_message);
                 deletePhotoBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked the "Delete" button, delete the photo
                         // TODO try passing in this stuff instead of creating it
                         File photoFile = new File(mCurrentPhotoPath);
-                        Uri photoUri = FileProvider.getUriForFile(v.getContext(), "com.bskup.ginventory.fileprovider", photoFile);
+                        Uri photoUri = FileProvider.getUriForFile(v.getContext(), v.getContext().getString(R.string.file_provider_path), photoFile);
                         Log.v(LOG_TAG, "photoUri : " + photoUri);
                         // Delete photo
                         long filesDeleted = getContentResolver().delete(photoUri, null, null);
@@ -175,7 +175,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                             // Show a toast message depending on whether or not the update was successful
                             if (rowsUpdated == 0) {
                                 // If no rows updated, there was an error with update
-                                Toast.makeText(v.getContext(), "Error with update", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(v.getContext(), R.string.update_failed, Toast.LENGTH_SHORT).show();
                             } else {
                                 // Otherwise, the update was successful and we can display a success toast
                                 Toast.makeText(v.getContext(), "Photo deleted, item updated", Toast.LENGTH_SHORT).show();
@@ -231,7 +231,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (mCurrentItemUri == null) {
             // If opened using FAB, uri will be null, change title to "Add an item"
             // No need to create a loader, nothing to load
-            setTitle("New item");
+            setTitle(getString(R.string.editor_title_new_item));
             // Invalidate options menu so "Delete" can be hidden
             // (Can't delete a blank item that hasn't been saved yet)
             // After calling this, onPrepareOptionsMenu is called
@@ -239,7 +239,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             // If opened using ListView item, uri will be present, change title to "Edit Item"
             // and load item data using loader
-            setTitle("Edit Item");
+            setTitle(getString(R.string.editor_title_edit_item));
             getSupportLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
         }
 
@@ -384,7 +384,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int sizeType = data.getInt(sizeTypeColumnIndex);
             String origin = data.getString(originColumnIndex);
             int abv = data.getInt(abvColumnIndex);
-            int purchasePrice = data.getInt(purchasePriceColumnIndex);
+            long purchasePriceAsCents = data.getLong(purchasePriceColumnIndex);
+            double purchasePriceAsDouble = purchasePriceAsCents / 100.0;
+            String purchasePriceString = String.format(Locale.US, "%.2f", purchasePriceAsDouble);
             long salePriceAsCents = data.getLong(salePriceColumnIndex);
             // ^should be 1299
             double salePriceAsDouble = salePriceAsCents / 100.0;
@@ -403,7 +405,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mSizeEditText.setText(String.valueOf(size));
             mOriginEditText.setText(origin);
             mAbvEditText.setText(String.valueOf(abv));
-            mPurchasePriceEditText.setText(String.valueOf(purchasePrice));
+            mPurchasePriceEditText.setText(purchasePriceString);
             mSalePriceEditText.setText(salePriceString);
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneNumberEditText.setText(String.valueOf(supplierPhoneNumber));
@@ -529,7 +531,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Log the current photo path
             Log.v(LOG_TAG, "Current photo path: " + mCurrentPhotoPath);
             // Show a toast that photo was saved
-            Toast.makeText(EditorActivity.this, "Photo saved", Toast.LENGTH_SHORT).show();
+            Toast.makeText(EditorActivity.this, R.string.photo_saved, Toast.LENGTH_SHORT).show();
 
             // Get Uri from current photo path and store in global variable so we can pass it
             // to the saveItem() method and store it in the database
@@ -714,10 +716,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private void showDiscardChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
         // Create AlertDialog.Builder and set message
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Discard changes?");
+        builder.setMessage(R.string.discard_changes_message);
         // Set positive and negative buttons and corresponding listeners
-        builder.setPositiveButton("Discard", discardButtonClickListener);
-        builder.setNegativeButton("Keep editing", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.discard_changes_positive_button, discardButtonClickListener);
+        builder.setNegativeButton(R.string.discard_changes_negative_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // User clicked "keep editing", dismiss dialog
@@ -859,6 +861,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         // Set error msg if purchase price left blank by user, otherwise parse it from
         // the String we pull from the EditText field
+        Double purchasePriceAsDouble;
         long purchasePriceAsCents;
         if (TextUtils.isEmpty(purchasePriceString)) {
             mPurchasePriceEditText.setError(getString(R.string.error_required_purchase_price));
@@ -868,7 +871,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return false;
         } else {
             // Parse purchase price and multiply by 100 to convert to cents to store as whole numbers
-            purchasePriceAsCents = Long.parseLong(purchasePriceString) * 100;
+            // Parse sale price and multiply by 100 to convert to cents to store as whole numbers
+            purchasePriceAsDouble = Double.valueOf(purchasePriceString);
+            Log.e(LOG_TAG, "purchasePriceAsDouble in saveItem: " + purchasePriceAsDouble);
+            purchasePriceAsCents =  Double.valueOf(purchasePriceAsDouble * 100.0).longValue();
+            Log.e(LOG_TAG, "purchasePriceAsCents in saveItem: " + purchasePriceAsCents);
         }
         // Set error msg if sale price left blank by user, otherwise parse it from
         // the String we pull from the EditText field
@@ -940,11 +947,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the update was successful
             if (rowsUpdated == 0) {
                 // If no rows updated, there was an error with update
-                Toast.makeText(this, "Error with update", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.update_failed, Toast.LENGTH_SHORT).show();
                 return false;
             } else {
                 // Otherwise, the update was successful and we can display a success toast
-                Toast.makeText(this, "Update successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.update_successful, Toast.LENGTH_SHORT).show();
             }
         } else {
             // If opened using FAB, uri will be null, proceed to "Add an item" (insert mode)
@@ -984,10 +991,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show a toast message depending on whether or not the delete was successful
             if (rowsDeleted == 0) {
                 // If no rows deleted, there was an error with delete
-                Toast.makeText(this, "Error with delete", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.delete_failed, Toast.LENGTH_SHORT).show();
             } else {
                 // Otherwise, the delete was successful and we can display a success toast
-                Toast.makeText(this, "Delete successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.delete_successful, Toast.LENGTH_SHORT).show();
             }
         }
     }

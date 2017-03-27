@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -99,12 +98,6 @@ public class ItemCursorAdapter extends CursorAdapter {
         // Extract origin
         String origin = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_ORIGIN
         ));
-        // Extract ABV%
-        String abv = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_ABV
-        ));
-        // Extract purchase price
-        String purchasePrice = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_PURCHASE_PRICE
-        ));
         // Extract sale price
         long salePriceAsCents = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SALE_PRICE
         ));
@@ -194,7 +187,7 @@ public class ItemCursorAdapter extends CursorAdapter {
                 // for the positive and negative buttons on the dialog
                 AlertDialog.Builder dialConfirmationBuilder = new AlertDialog.Builder(v.getContext());
                 dialConfirmationBuilder.setMessage("Are you sure you want to dial " + supplierName + " for more " + name + "?");
-                dialConfirmationBuilder.setPositiveButton("Yes, dial", new DialogInterface.OnClickListener() {
+                dialConfirmationBuilder.setPositiveButton(R.string.dial_positive_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked "Yes, dial" button, dial supplier phone number
                         // Create intent to open phone app using supplier phone number
@@ -243,7 +236,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     }
 
     // Override getView so we have access to the position in list that was clicked on
-    // TODO put this stuff back in bindView using _id instead of position in list+1....wtf am i doing
+    // TODO put this stuff back in bindView using _id instead of position in list+1....?
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Log.e(LOG_TAG, "getView called, position " + position);
@@ -272,10 +265,10 @@ public class ItemCursorAdapter extends CursorAdapter {
                         // Notify listener that data has changed
                         Uri uri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, position + 1);
                         v.getContext().getContentResolver().notifyChange(uri, null);
-                        Toast.makeText(v.getContext(), "Quantity decreased", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), R.string.quantity_decreased, Toast.LENGTH_SHORT).show();
                     } else {
-                        // Update unsuccessful
-                        Toast.makeText(v.getContext(), "Update unsuccessful", Toast.LENGTH_SHORT).show();
+                        // Update failed
+                        Toast.makeText(v.getContext(), R.string.update_failed, Toast.LENGTH_SHORT).show();
                     }
                 }
                 cursor.close();
@@ -305,10 +298,10 @@ public class ItemCursorAdapter extends CursorAdapter {
                         // Notify listener that data has changed
                         Uri uri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, position + 1);
                         v.getContext().getContentResolver().notifyChange(uri, null);
-                        Toast.makeText(v.getContext(), "Quantity increased", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), R.string.quantity_increased, Toast.LENGTH_SHORT).show();
                     } else {
-                        // Update unsuccessful
-                        Toast.makeText(v.getContext(), "Update unsuccessful", Toast.LENGTH_SHORT).show();
+                        // Update failed
+                        Toast.makeText(v.getContext(), R.string.update_failed, Toast.LENGTH_SHORT).show();
                     }
                 }
                 cursor.close();

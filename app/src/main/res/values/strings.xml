@@ -73,5 +73,19 @@
     <string name="error_required_supplier_name">Supplier name is required.</string>
     <string name="error_required_supplier_phone_number">Supplier phone number is required.</string>
     <string name="file_provider_path">com.bskup.ginventory.fileprovider</string>
+    <string name="quantity_decreased">Quantity decreased</string>
+    <string name="update_failed">Update failed</string>
+    <string name="quantity_increased">Quantity increased</string>
+    <string name="dial_positive_button">Yes, dial</string>
+    <string name="delete_successful">Delete successful</string>
+    <string name="delete_failed">Delete failed</string>
+    <string name="update_successful">Update successful</string>
+    <string name="discard_changes_message">Discard changes?</string>
+    <string name="discard_changes_positive_button">Discard</string>
+    <string name="discard_changes_negative_button">Keep editing</string>
+    <string name="photo_saved">Photo saved</string>
+    <string name="editor_title_new_item">New item</string>
+    <string name="editor_title_edit_item">Edit Item</string>
+    <string name="delete_photo_message">Are you sure you want to delete this photo?</string>
 
 </resources>
