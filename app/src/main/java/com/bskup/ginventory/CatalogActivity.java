@@ -167,7 +167,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     }
 
     // Helper method to insert hardcoded item data into the database for debugging purposes
-    private void insertItem() {
+    private void insertDummyItem() {
         // Create a ContentValues object where column names are the keys,
         // and inventory item's attributes are the values.
         ContentValues values = new ContentValues();
@@ -201,7 +201,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         switch (item.getItemId()) {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-                insertItem();
+                insertDummyItem();
                 return true;
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:

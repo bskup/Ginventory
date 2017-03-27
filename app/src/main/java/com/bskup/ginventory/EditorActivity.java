@@ -377,7 +377,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int supplierPhoneNumberColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER);
             int photoPathColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_PHOTO_PATH);
 
-            // Extract values from cursor using each column index
+            // Extract values from cursor using each column index, convert where necessary
             String name = data.getString(nameColumnIndex);
             int quantity = data.getInt(quantityColumnIndex);
             int size = data.getInt(sizeColumnIndex);
@@ -385,21 +385,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String origin = data.getString(originColumnIndex);
             int abv = data.getInt(abvColumnIndex);
             int purchasePrice = data.getInt(purchasePriceColumnIndex);
-            int salePrice = data.getInt(salePriceColumnIndex);
+            long salePriceAsCents = data.getLong(salePriceColumnIndex);
+            // ^should be 1299
+            double salePriceAsDouble = salePriceAsCents / 100.0;
+            Log.e(LOG_TAG, "salePriceAsDouble in onLoadFinished: " + salePriceAsDouble);
+            // ^should be 12.99
+            String salePriceString = String.format(Locale.US, "%.2f", salePriceAsDouble);
+            Log.e(LOG_TAG, "salePriceString in onLoadFinished: " + salePriceString);
             int spiritType = data.getInt(spiritTypeColumnIndex);
             String supplierName = data.getString(supplierNameColumnIndex);
             long supplierPhoneNumber = data.getLong(supplierPhoneNumberColumnIndex);
             String photoPath = data.getString(photoPathColumnIndex);
 
             // Update EditText fields with values extracted from cursor
-            // TODO convert between decimal form and integer for prices?
             mNameEditText.setText(name);
             mQuantityEditText.setText(String.valueOf(quantity));
             mSizeEditText.setText(String.valueOf(size));
             mOriginEditText.setText(origin);
             mAbvEditText.setText(String.valueOf(abv));
             mPurchasePriceEditText.setText(String.valueOf(purchasePrice));
-            mSalePriceEditText.setText(String.valueOf(salePrice));
+            mSalePriceEditText.setText(salePriceString);
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneNumberEditText.setText(String.valueOf(supplierPhoneNumber));
 
@@ -597,7 +602,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Continue only if the File was successfully created
             if (mCurrentPhotoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.bskup.ginventory.fileprovider",
+                        getString(R.string.file_provider_path),
                         mCurrentPhotoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -641,7 +646,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         // Read value user selects from Spirit Type spinner and change global variable mSpiritType
         // to corresponding integer defined in ItemContract (used when saving an item)
-        // TODO switch statement
         mSpiritTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -683,7 +687,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         });
         // Read value user selects from Size Type spinner and change global variable mSizeType
         // to corresponding integer defined in ItemContract (used when saving an item)
-        // TODO switch statement
         mSizeTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -787,12 +790,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
 
-        // TODO covered empty case, now do invalid input type
         // Set error msg if name left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         String name;
         if (TextUtils.isEmpty(nameString)) {
-            mNameEditText.setError("Item name is required.");
+            mNameEditText.setError(getString(R.string.error_required_name));
             // Request focus so error message is automatically displayed
             mNameEditText.requestFocus();
             // Return without saving
@@ -804,7 +806,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // the String we pull from the EditText field
         int quantity;
         if (TextUtils.isEmpty(quantityString)) {
-            mQuantityEditText.setError("Quantity is required.");
+            mQuantityEditText.setError(getString(R.string.error_required_quantity));
+            // Request focus so error message is automatically displayed
+            mQuantityEditText.requestFocus();
+            // Return without saving
+            return false;
+        } else if (Integer.parseInt(quantityString) < 0) {
+            // If quantity is somehow negative
+            mQuantityEditText.setError(getString(R.string.error_invalid_quantity));
             // Request focus so error message is automatically displayed
             mQuantityEditText.requestFocus();
             // Return without saving
@@ -816,7 +825,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // the String we pull from the EditText field
         String origin;
         if (TextUtils.isEmpty(originString)) {
-            mOriginEditText.setError("Country of origin is required.");
+            mOriginEditText.setError(getString(R.string.error_required_origin));
             // Request focus so error message is automatically displayed
             mQuantityEditText.requestFocus();
             // Return without saving
@@ -828,7 +837,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // the String we pull from the EditText field
         int size;
         if (TextUtils.isEmpty(sizeString)) {
-            mSizeEditText.setError("Item size is required.");
+            mSizeEditText.setError(getString(R.string.error_required_size));
             // Request focus so error message is automatically displayed
             mSizeEditText.requestFocus();
             // Return without saving
@@ -840,7 +849,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // the String we pull from the EditText field
         int abv;
         if (TextUtils.isEmpty(abvString)) {
-            mAbvEditText.setError("ABV% is required.");
+            mAbvEditText.setError(getString(R.string.error_required_abv));
             // Request focus so error message is automatically displayed
             mAbvEditText.requestFocus();
             // Return without saving
@@ -850,33 +859,39 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         // Set error msg if purchase price left blank by user, otherwise parse it from
         // the String we pull from the EditText field
-        int purchasePrice;
+        long purchasePriceAsCents;
         if (TextUtils.isEmpty(purchasePriceString)) {
-            mPurchasePriceEditText.setError("Purchase price is required.");
+            mPurchasePriceEditText.setError(getString(R.string.error_required_purchase_price));
             // Request focus so error message is automatically displayed
             mPurchasePriceEditText.requestFocus();
             // Return without saving
             return false;
         } else {
-            purchasePrice = Integer.parseInt(purchasePriceString);
+            // Parse purchase price and multiply by 100 to convert to cents to store as whole numbers
+            purchasePriceAsCents = Long.parseLong(purchasePriceString) * 100;
         }
         // Set error msg if sale price left blank by user, otherwise parse it from
         // the String we pull from the EditText field
-        int salePrice;
+        Double salePriceAsDouble;
+        long salePriceAsCents;
         if (TextUtils.isEmpty(salePriceString)) {
-            mSalePriceEditText.setError("Sale price is required.");
+            mSalePriceEditText.setError(getString(R.string.error_required_sale_price));
             // Request focus so error message is automatically displayed
             mSalePriceEditText.requestFocus();
             // Return without saving
             return false;
         } else {
-            salePrice = Integer.parseInt(salePriceString);
+            // Parse sale price and multiply by 100 to convert to cents to store as whole numbers
+            salePriceAsDouble = Double.valueOf(salePriceString);
+            Log.e(LOG_TAG, "salePriceAsDouble in saveItem: " + salePriceAsDouble);
+            salePriceAsCents =  Double.valueOf(salePriceAsDouble * 100.0).longValue();
+            Log.e(LOG_TAG, "salePriceAsCents in saveItem: " + salePriceAsCents);
         }
         // Set error msg if supplier name left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         String supplierName;
         if (TextUtils.isEmpty(supplierNameString)) {
-            mSupplierNameEditText.setError("Supplier name is required.");
+            mSupplierNameEditText.setError(getString(R.string.error_required_supplier_name));
             // Request focus so error message is automatically displayed
             mSupplierNameEditText.requestFocus();
             // Return without saving
@@ -888,7 +903,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // the String we pull from the EditText field
         long supplierPhoneNumber;
         if (TextUtils.isEmpty(supplierPhoneNumberString)) {
-            mSupplierPhoneNumberEditText.setError("Supplier phone number is required.");
+            mSupplierPhoneNumberEditText.setError(getString(R.string.error_required_supplier_phone_number));
             // Request focus so error message is automatically displayed
             mSupplierPhoneNumberEditText.requestFocus();
             // Return without saving
@@ -907,8 +922,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ItemEntry.COLUMN_ITEM_SIZE, size);
         values.put(ItemEntry.COLUMN_ITEM_SIZE_TYPE, mSizeType);
         values.put(ItemEntry.COLUMN_ITEM_ABV, abv);
-        values.put(ItemEntry.COLUMN_ITEM_PURCHASE_PRICE, purchasePrice);
-        values.put(ItemEntry.COLUMN_ITEM_SALE_PRICE, salePrice);
+        values.put(ItemEntry.COLUMN_ITEM_PURCHASE_PRICE, purchasePriceAsCents);
+        values.put(ItemEntry.COLUMN_ITEM_SALE_PRICE, salePriceAsCents);
         values.put(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE, mSpiritType);
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME, supplierName);
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER, supplierPhoneNumber);

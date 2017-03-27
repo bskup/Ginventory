@@ -62,5 +62,16 @@
     <string name="settings_theme_dark_value">AppThemeDark</string>
     <string name="settings_theme_default">AppThemeLight</string>
     <string name="no_photo_available">No item photo available</string>
+    <string name="error_required_name">Item name is required.</string>
+    <string name="error_required_quantity">Quantity is required.</string>
+    <string name="error_invalid_quantity">Invalid quantity.</string>
+    <string name="error_required_origin">Country of origin is required.</string>
+    <string name="error_required_size">Item size is required.</string>
+    <string name="error_required_abv">ABV% is required.</string>
+    <string name="error_required_purchase_price">Purchase price is required.</string>
+    <string name="error_required_sale_price">Sale price is required.</string>
+    <string name="error_required_supplier_name">Supplier name is required.</string>
+    <string name="error_required_supplier_phone_number">Supplier phone number is required.</string>
+    <string name="file_provider_path">com.bskup.ginventory.fileprovider</string>
 
 </resources>

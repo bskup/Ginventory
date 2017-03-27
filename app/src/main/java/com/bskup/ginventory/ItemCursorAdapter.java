@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.bskup.ginventory.data.ItemContract.ItemEntry;
 
 import java.io.File;
+import java.util.Locale;
 
 
 public class ItemCursorAdapter extends CursorAdapter {
@@ -105,9 +106,13 @@ public class ItemCursorAdapter extends CursorAdapter {
         String purchasePrice = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_PURCHASE_PRICE
         ));
         // Extract sale price
-        String salePrice = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SALE_PRICE
+        long salePriceAsCents = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SALE_PRICE
         ));
-        salePrice = "$" + salePrice;
+        Log.e(LOG_TAG, "salePriceAsCents in itemCursorAdapter: " + salePriceAsCents);
+        // Divide by 100 to display as decimal
+        double salePriceAsDouble = salePriceAsCents / 100.0;
+        Log.e(LOG_TAG, "salePriceAsDouble in itemCursorAdapter: " + salePriceAsDouble);
+        String salePriceString = "$" + String.format(Locale.US, "%.2f", salePriceAsDouble);
         // Extract spirit type
         int spiritType = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE
         ));
@@ -223,7 +228,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         textViewName.setText(name);
         textViewSummary.setText(summary);
         textViewBigFontQuantity.setText(quantity);
-        textViewPriceBubble.setText(salePrice);
+        textViewPriceBubble.setText(salePriceString);
 
         // Change quantity text color based on amount in stock
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);

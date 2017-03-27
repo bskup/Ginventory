@@ -268,7 +268,7 @@
                     style="@style/EditorFieldStyle"
                     android:layout_weight="1"
                     android:hint="@string/hint_item_abv"
-                    android:inputType="number"/>
+                    android:inputType="numberDecimal"/>
             </LinearLayout>
             <!-- Purchase price LinearLayout -->
             <LinearLayout
@@ -290,7 +290,7 @@
                     style="@style/EditorFieldStyle"
                     android:layout_weight="1"
                     android:hint="@string/hint_item_purchase_price"
-                    android:inputType="number"/>
+                    android:inputType="numberDecimal"/>
             </LinearLayout>
             <!-- Sale price LinearLayout -->
             <LinearLayout
@@ -312,7 +312,7 @@
                     style="@style/EditorFieldStyle"
                     android:layout_weight="1"
                     android:hint="@string/hint_item_sale_price"
-                    android:inputType="number"/>
+                    android:inputType="numberDecimal"/>
             </LinearLayout>
             <!-- Supplier name LinearLayout -->
             <LinearLayout
