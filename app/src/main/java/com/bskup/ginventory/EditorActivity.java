@@ -83,6 +83,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private ImageView mViewPhotoFullSizeImageView;
     // Delete photo image view
     private ImageView mDeletePhotoImageView;
+    // Editor down arrow container
+    private LinearLayout mLinearLayoutEditorDownArrowContainer;
+    // Editor up arrow container
+    private LinearLayout mLinearLayoutEditorUpArrowContainer;
 
     // Loader ID for loader to use when loading an existing item from InventoryItems db
     private static final int EXISTING_ITEM_LOADER = 0;
@@ -255,6 +259,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSizeTypeSpinner = (Spinner) findViewById(R.id.spinner_size_type);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_item_supplier_name);
         mSupplierPhoneNumberEditText = (EditText) findViewById(R.id.edit_item_supplier_phone_number);
+        mLinearLayoutEditorDownArrowContainer = (LinearLayout) findViewById(R.id.linear_layout_editor_down_arrow_container);
+        mLinearLayoutEditorUpArrowContainer = (LinearLayout) findViewById(R.id.linear_layout_editor_up_arrow_container);
 
         // Set touch listener on all fields to know whether or not to show "discard changes?" dialog
         mNameEditText.setOnTouchListener(mOnTouchListener);
@@ -268,6 +274,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSizeTypeSpinner.setOnTouchListener(mOnTouchListener);
         mSupplierNameEditText.setOnTouchListener(mOnTouchListener);
         mSupplierPhoneNumberEditText.setOnTouchListener(mOnTouchListener);
+        mLinearLayoutEditorDownArrowContainer.setOnTouchListener(mOnTouchListener);
+        mLinearLayoutEditorUpArrowContainer.setOnTouchListener(mOnTouchListener);
 
         // Call helper method to set up our spinners
         setupSpinners();
@@ -303,6 +311,33 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mViewPhotoFullSizeImageView.setOnClickListener(mOpenFullSizePhotoClickListener);
             mDeletePhotoImageView.setOnClickListener(mDeletePhotoClickListener);
         }
+
+        // Set click listener on down arrow
+        mLinearLayoutEditorDownArrowContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do this when down arrow clicked
+                int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
+                // If quantity is at least 1 we can reduce it by 1
+                if (currentQuantity >= 1) {
+                    int newQuantity = currentQuantity - 1;
+                    mQuantityEditText.setText(String.valueOf(newQuantity));
+                }
+            }
+        });
+        // Set click listener on up arrow
+        mLinearLayoutEditorUpArrowContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do this when up arrow clicked
+                int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
+                // If current quantity is at least 1 below max value, increase it by 1
+                if (currentQuantity <= (Integer.MAX_VALUE - 1)) {
+                    int newQuantity = currentQuantity + 1;
+                    mQuantityEditText.setText(String.valueOf(newQuantity));
+                }
+            }
+        });
     }
 
     // Override back button press to show dialog if pressed after item has been touched
