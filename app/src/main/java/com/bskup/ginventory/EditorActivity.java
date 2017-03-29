@@ -317,11 +317,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
                 // Do this when down arrow clicked
-                int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
-                // If quantity is at least 1 we can reduce it by 1
-                if (currentQuantity >= 1) {
-                    int newQuantity = currentQuantity - 1;
-                    mQuantityEditText.setText(String.valueOf(newQuantity));
+                if (!mQuantityEditText.getText().toString().isEmpty()) {
+                    int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
+                    // If quantity is at least 1 we can reduce it by 1
+                    if (currentQuantity >= 1) {
+                        int newQuantity = currentQuantity - 1;
+                        mQuantityEditText.setText(String.valueOf(newQuantity));
+                    }
                 }
             }
         });
@@ -330,11 +332,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
                 // Do this when up arrow clicked
-                int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
-                // If current quantity is at least 1 below max value, increase it by 1
-                if (currentQuantity <= (Integer.MAX_VALUE - 1)) {
-                    int newQuantity = currentQuantity + 1;
-                    mQuantityEditText.setText(String.valueOf(newQuantity));
+                if (!mQuantityEditText.getText().toString().isEmpty()) {
+                    int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
+                    // If current quantity is at least 1 below max value, increase it by 1
+                    if (currentQuantity <= (Integer.MAX_VALUE - 1)) {
+                        int newQuantity = currentQuantity + 1;
+                        mQuantityEditText.setText(String.valueOf(newQuantity));
+                    }
                 }
             }
         });
