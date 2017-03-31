@@ -27,6 +27,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -38,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bskup.ginventory.data.ItemContract.ItemEntry;
@@ -87,6 +89,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private LinearLayout mLinearLayoutEditorDownArrowContainer;
     // Editor up arrow container
     private LinearLayout mLinearLayoutEditorUpArrowContainer;
+    // Collapse details container
+    private LinearLayout mLinearLayoutCollapseDetailsContainer;
+    // Details container to show/hide
+    private LinearLayout mLinearLayoutDetailsContainer;
+    // Collapse notes container
+    private LinearLayout mLinearLayoutCollapseNotesContainer;
+    // Notes container to show/hide
+    private LinearLayout mLinearLayoutNotesContainer;
+    // Image view arrow left of collapse details
+    private ImageView mImageViewArrowLeftOfCollapseDetails;
+    // Image view arrow right of collapse details
+    private ImageView mImageViewArrowRightOfCollapseDetails;
+    // Image view arrow left of collapse notes
+    private ImageView mImageViewArrowLeftOfCollapseNotes;
+    // Image view arrow right of collapse notes
+    private ImageView mImageViewArrowRightOfCollapseNotes;
+    // Text view collapse details text
+    private TextView mTextViewCollapseDetails;
+    // Text view collapse notes text
+    private TextView mTextViewCollapseNotes;
 
     // Loader ID for loader to use when loading an existing item from InventoryItems db
     private static final int EXISTING_ITEM_LOADER = 0;
@@ -261,6 +283,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierPhoneNumberEditText = (EditText) findViewById(R.id.edit_item_supplier_phone_number);
         mLinearLayoutEditorDownArrowContainer = (LinearLayout) findViewById(R.id.linear_layout_editor_down_arrow_container);
         mLinearLayoutEditorUpArrowContainer = (LinearLayout) findViewById(R.id.linear_layout_editor_up_arrow_container);
+        mLinearLayoutCollapseDetailsContainer = (LinearLayout) findViewById(R.id.linear_layout_collapse_details_container);
+        mLinearLayoutDetailsContainer = (LinearLayout) findViewById(R.id.linear_layout_details_container);
+        mLinearLayoutCollapseNotesContainer = (LinearLayout) findViewById(R.id.linear_layout_collapse_notes_container);
+        mLinearLayoutNotesContainer = (LinearLayout) findViewById(R.id.linear_layout_notes_container);
+        mImageViewArrowLeftOfCollapseDetails = (ImageView) findViewById(R.id.image_view_arrow_left_of_collapse_details);
+        mImageViewArrowRightOfCollapseDetails = (ImageView) findViewById(R.id.image_view_arrow_right_of_collapse_details);
+        mImageViewArrowLeftOfCollapseNotes = (ImageView) findViewById(R.id.image_view_arrow_left_of_collapse_notes);
+        mImageViewArrowRightOfCollapseNotes = (ImageView) findViewById(R.id.image_view_arrow_right_of_collapse_notes);
+        mTextViewCollapseDetails = (TextView) findViewById(R.id.text_view_collapse_details);
+        mTextViewCollapseNotes = (TextView) findViewById(R.id.text_view_collapse_notes);
 
         // Set touch listener on all fields to know whether or not to show "discard changes?" dialog
         mNameEditText.setOnTouchListener(mOnTouchListener);
@@ -339,6 +371,58 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         int newQuantity = currentQuantity + 1;
                         mQuantityEditText.setText(String.valueOf(newQuantity));
                     }
+                }
+            }
+        });
+
+        // Set click listener on collapse details container
+        mLinearLayoutCollapseDetailsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do this when collapse details is clicked
+                // If its not hidden already, hide details container layout
+                if (mLinearLayoutDetailsContainer.getVisibility() == View.VISIBLE) {
+                    mLinearLayoutDetailsContainer.setVisibility(View.GONE);
+                    // Change collapse details to "expand details" and down arrows
+                    mTextViewCollapseDetails.setText(R.string.expand_details);
+                    TypedValue typedValue = new TypedValue();
+                    getTheme().resolveAttribute(R.attr.theme_dependent_down_arrow_icon, typedValue, true);
+                    mImageViewArrowLeftOfCollapseDetails.setImageResource(typedValue.resourceId);
+                    mImageViewArrowRightOfCollapseDetails.setImageResource(typedValue.resourceId);
+                } else if (mLinearLayoutDetailsContainer.getVisibility() == View.GONE) {
+                    mLinearLayoutDetailsContainer.setVisibility(View.VISIBLE);
+                    // Change expand details to "collapse details" and up arrows
+                    mTextViewCollapseDetails.setText(R.string.collapse_details);
+                    TypedValue typedValue = new TypedValue();
+                    getTheme().resolveAttribute(R.attr.theme_dependent_up_arrow_icon, typedValue, true);
+                    mImageViewArrowLeftOfCollapseDetails.setImageResource(typedValue.resourceId);
+                    mImageViewArrowRightOfCollapseDetails.setImageResource(typedValue.resourceId);
+                }
+            }
+        });
+
+        // Set click listener on collapse notes container
+        mLinearLayoutCollapseNotesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Do this when collapse notes is clicked
+                // If its not hidden already, hide notes container layout
+                if (mLinearLayoutNotesContainer.getVisibility() == View.VISIBLE) {
+                    mLinearLayoutNotesContainer.setVisibility(View.GONE);
+                    // Change collapse notes to "expand notes" and down arrows
+                    mTextViewCollapseNotes.setText(R.string.expand_notes);
+                    TypedValue typedValue = new TypedValue();
+                    getTheme().resolveAttribute(R.attr.theme_dependent_down_arrow_icon, typedValue, true);
+                    mImageViewArrowLeftOfCollapseNotes.setImageResource(typedValue.resourceId);
+                    mImageViewArrowRightOfCollapseNotes.setImageResource(typedValue.resourceId);
+                } else if (mLinearLayoutNotesContainer.getVisibility() == View.GONE) {
+                    mLinearLayoutNotesContainer.setVisibility(View.VISIBLE);
+                    // Change expand notes to "collapse notes" and up arrows
+                    mTextViewCollapseNotes.setText(R.string.collapse_notes);
+                    TypedValue typedValue = new TypedValue();
+                    getTheme().resolveAttribute(R.attr.theme_dependent_up_arrow_icon, typedValue, true);
+                    mImageViewArrowLeftOfCollapseNotes.setImageResource(typedValue.resourceId);
+                    mImageViewArrowRightOfCollapseNotes.setImageResource(typedValue.resourceId);
                 }
             }
         });
