@@ -79,6 +79,12 @@ public class ItemContract extends AppCompatActivity {
         // Uri of item photo saved as String
         // SQL data type: TEXT
         public final static String COLUMN_ITEM_PHOTO_PATH = "photopath";
+        // Notes saved as String
+        // SQL data type: TEXT
+        public final static String COLUMN_ITEM_NOTES = "notes";
+        // Target quantity of items to achieve full stock level
+        // SQL data type: INTEGER
+        public final static String COLUMN_ITEM_TARGET_QUANTITY = "targetquantity";
 
         // Possible values for spirit type
         public static final int SPIRIT_TYPE_UNKNOWN = 0;

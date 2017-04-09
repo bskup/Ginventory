@@ -165,8 +165,11 @@ public class ItemProvider extends ContentProvider {
         if (supplierPhoneNumber == null) {
             throw new IllegalArgumentException("Item requires a supplier phone number");
         }
-
-        // TODO check other attributes
+        // Check that the target quantity is not null
+        Integer targetQuantity = values.getAsInteger(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY);
+        if (targetQuantity == null) {
+            throw new IllegalArgumentException("Item requires a target quantity");
+        }
 
         // Check that quantity >= 0, at this point we already know if it is null
         if (quantity < 0) {
@@ -187,6 +190,10 @@ public class ItemProvider extends ContentProvider {
         // Check that sale price >= 0, at this point we already know if it is null
         if (salePrice < 0) {
             throw new IllegalArgumentException("Item requires a valid sale price");
+        }
+        // Check that target quantity >= 0, at this point we already know if it is null
+        if (targetQuantity < 0) {
+            throw new IllegalArgumentException("Item requires a valid target quantity");
         }
         // Check that spirit type is valid
         Integer spiritTypeToCheck = values.getAsInteger(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE);
@@ -345,6 +352,15 @@ public class ItemProvider extends ContentProvider {
             Integer spiritTypeToCheck = values.getAsInteger(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE);
             if (spiritTypeToCheck == null || !ItemEntry.isValidSpiritType(spiritTypeToCheck)) {
                 throw new IllegalArgumentException("Item requires a valid spirit type");
+            }
+        }
+        // Check if ContentValues object contains target quantity key
+        // If it does, check it for validity
+        if (values.containsKey(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY)) {
+            // Check that target quantity is valid
+            Integer targetQuantity = values.getAsInteger(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY);
+            if (targetQuantity != null && targetQuantity < 0) {
+                throw new IllegalArgumentException("Item requires a valid target quantity");
             }
         }
 

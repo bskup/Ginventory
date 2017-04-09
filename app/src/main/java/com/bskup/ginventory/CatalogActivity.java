@@ -106,6 +106,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 ItemEntry.COLUMN_ITEM_SPIRIT_TYPE,
                 ItemEntry.COLUMN_ITEM_SUPPLIER_NAME,
                 ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER,
+                ItemEntry.COLUMN_ITEM_NOTES,
+                ItemEntry.COLUMN_ITEM_TARGET_QUANTITY,
                 ItemEntry.COLUMN_ITEM_PHOTO_PATH };
 
         return new CursorLoader(this, ItemEntry.CONTENT_URI, projection, null, null, null);
@@ -181,6 +183,8 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(ItemEntry.COLUMN_ITEM_SALE_PRICE, "1299");
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME, "Sysco");
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER, "1112223333");
+        values.put(ItemEntry.COLUMN_ITEM_NOTES, "Wtf is this?");
+        values.put(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY, "100");
         values.put(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE, ItemEntry.SPIRIT_TYPE_GIN);
 
         // Insert a new row for our test item using ContentResolver, returns uri of new row

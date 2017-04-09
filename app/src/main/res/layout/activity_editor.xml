@@ -22,14 +22,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="8dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="8dp">
 
                 <!-- Top section with picture -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/list_item_margin">
 
                     <!-- Picture container -->
                     <RelativeLayout
@@ -65,7 +66,7 @@
                                 style="@style/EditorFieldStyle"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add a Photo"
+                                android:text="@string/editor_add_a_photo"
                                 android:textColor="@android:color/white"/>
                         </LinearLayout>
                     </RelativeLayout>
@@ -80,11 +81,12 @@
                             android:id="@+id/view_full_size_photo_image_view"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:alpha="0.5"
                             android:padding="4dp"
-                            android:src="?attr/theme_dependent_view_photo_full_size_icon"
-                            tools:src="@drawable/ic_view_photo_full_size_black"/>
+                            android:src="?attr/theme_dependent_view_photo_full_size_icon"/>
 
                         <ImageView
                             android:id="@+id/delete_photo_image_view"
@@ -93,9 +95,81 @@
                             android:layout_alignParentBottom="true"
                             android:alpha="0.5"
                             android:padding="4dp"
-                            android:src="?attr/theme_dependent_delete_photo_icon"
-                            tools:src="@drawable/ic_delete_photo_black"/>
+                            android:src="?attr/theme_dependent_delete_photo_icon"/>
 
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relative_layout_bar_chart_area_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/list_item_margin">
+
+                        <View
+                            android:id="@+id/view_bar_chart_target_stock"
+                            android:layout_width="match_parent"
+                            android:layout_height="22dp"
+                            android:alpha="0.5"
+                            android:background="?attr/theme_dependent_contrast_bg"/>
+
+                        <View
+                            android:id="@+id/view_bar_chart_in_stock"
+                            android:layout_width="80dp"
+                            android:layout_height="22dp"
+                            android:background="@color/colorPrimary"/>
+
+                        <TextView
+                            android:id="@+id/text_view_bar_chart_label_inventory"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/view_bar_chart_target_stock"
+                            android:layout_marginTop="4dp"
+                            android:alpha="0.5"
+                            android:text="Inventory Level: 40%"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:id="@+id/text_view_bar_chart_label_restock"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/text_view_bar_chart_label_inventory"
+                            android:layout_marginTop="4dp"
+                            android:alpha="0.5"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="Restock: $12300.00 (123 @ $100.00)"
+                            android:textSize="12sp"/>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_editor_restock_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/text_view_bar_chart_label_restock"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/rounded_corner_text_view"
+                            android:orientation="horizontal"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="8dp"
+                            android:paddingRight="8dp"
+                            android:paddingTop="2dp">
+
+                            <TextView
+                                android:id="@+id/text_view_bar_chart_label_total"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="2dp"
+                                android:text="@string/editor_restock_button_text"
+                                android:textAllCaps="true"
+                                android:textColor="#FFFFFF"
+                                android:textSize="12sp"/>
+
+                            <ImageView
+                                android:id="@+id/image_view_theme_dependent_order_more_icon"
+                                android:layout_width="14dp"
+                                android:layout_height="14dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_call_white"/>
+                        </LinearLayout>
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -145,7 +219,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="In Stock:"/>
+                            android:text="@string/editor_category_in_stock"/>
 
                         <!-- Quantity field -->
                         <EditText
@@ -202,7 +276,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Size"/>
+                            android:text="@string/editor_category_size"/>
 
                         <!-- Size field -->
                         <EditText
@@ -218,7 +292,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginBottom="0dp"
-                            android:paddingRight="8dp"
+                            android:paddingLeft="8dp"
+                            android:alpha="0.87"
                             android:spinnerMode="dropdown"/>
                         <!-- Spirit type Label -->
                         <TextView
@@ -226,7 +301,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Type"/>
+                            android:text="@string/editor_category_type"/>
                         <!-- Spirit type drop-down spinner -->
                         <Spinner
                             android:id="@+id/spinner_spirit_type"
@@ -234,7 +309,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginBottom="0dp"
-                            android:paddingRight="8dp"
+                            android:paddingLeft="8dp"
+                            android:alpha="0.87"
                             android:spinnerMode="dropdown"/>
                     </LinearLayout>
 
@@ -268,41 +344,32 @@
                     android:paddingRight="4dp"
                     android:paddingTop="12dp">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/image_view_arrow_left_of_collapse_details"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:alpha="0.5"
+                            android:layout_gravity="center_vertical"
+                            android:src="?attr/theme_dependent_up_arrow_icon"/>
 
-                    <ImageView
-                        android:id="@+id/image_view_arrow_left_of_collapse_details"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:alpha="0.5"
-                        android:layout_centerVertical="true"
-                        android:src="?attr/theme_dependent_up_arrow_icon"
-                        tools:src="@drawable/ic_arrow_up_black"/>
+                        <TextView
+                            android:id="@+id/text_view_collapse_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:alpha="0.5"
+                            android:text="@string/editor_collapse_details"
+                            android:textAllCaps="true"
+                            android:textSize="12sp"/>
 
-                    <TextView
-                        android:id="@+id/text_view_collapse_details"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:alpha="0.5"
-                        android:layout_toRightOf="@+id/image_view_arrow_left_of_collapse_details"
-                        android:text="Collapse Details"
-                        android:textAllCaps="true"
-                        android:textSize="12sp"/>
-
-                    <ImageView
-                        android:id="@+id/image_view_arrow_right_of_collapse_details"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:alpha="0.5"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/text_view_collapse_details"
-                        android:src="?attr/theme_dependent_up_arrow_icon"
-                        tools:src="@drawable/ic_arrow_up_black"/>
-                    </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/image_view_arrow_right_of_collapse_details"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center_vertical"
+                            android:alpha="0.5"
+                            android:src="?attr/theme_dependent_up_arrow_icon"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -318,11 +385,12 @@
 
                         <!-- Origin Label -->
                         <TextView
+                            android:id="@+id/textView"
                             style="@style/CategoryStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Origin"/>
+                            android:text="@string/editor_category_origin"/>
 
                         <!-- Origin field -->
                         <EditText
@@ -345,7 +413,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="ABV%"/>
+                            android:text="@string/editor_category_abv"/>
 
                         <!-- ABV field -->
                         <EditText
@@ -367,7 +435,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Purchase price"/>
+                            android:text="@string/editor_category_purchase_price"/>
 
                         <!-- Purchase price field -->
                         <EditText
@@ -389,7 +457,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Sale price"/>
+                            android:text="@string/editor_category_sale_price"/>
 
                         <!-- Sale price field -->
                         <EditText
@@ -411,7 +479,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Supplier name"/>
+                            android:text="@string/editor_category_supplier_name"/>
 
                         <!-- Sale price field -->
                         <EditText
@@ -433,7 +501,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
-                            android:text="Supplier phone"/>
+                            android:text="@string/editor_category_supplier_phone"/>
 
                         <!-- Supplier phone number field -->
                         <EditText
@@ -441,6 +509,28 @@
                             style="@style/EditorFieldStyle"
                             android:layout_weight="1"
                             android:hint="@string/hint_item_supplier_phone_number"
+                            android:inputType="phone"/>
+                    </LinearLayout>
+                    <!-- Supplier phone number LinearLayout -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Target quantity Label -->
+                        <TextView
+                            style="@style/CategoryStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:text="@string/editor_category_target_quantity"/>
+
+                        <!-- Target quantity field -->
+                        <EditText
+                            android:id="@+id/edit_item_target_quantity"
+                            style="@style/EditorFieldStyle"
+                            android:layout_weight="1"
+                            android:hint="@string/hint_item_target_quantity"
                             android:inputType="phone"/>
                     </LinearLayout>
 
@@ -453,8 +543,8 @@
             android:id="@+id/card_comments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:layout_marginBottom="@dimen/activity_margin">
+            android:layout_marginBottom="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -475,42 +565,33 @@
                     android:paddingRight="4dp"
                     android:paddingTop="12dp">
 
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/image_view_arrow_left_of_collapse_notes"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center_vertical"
+                            android:alpha="0.5"
+                            android:src="?attr/theme_dependent_down_arrow_icon"/>
 
-                    <ImageView
-                        android:id="@+id/image_view_arrow_left_of_collapse_notes"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:alpha="0.5"
-                        android:layout_centerVertical="true"
-                        android:src="?attr/theme_dependent_down_arrow_icon"
-                        tools:src="@drawable/ic_arrow_up_black"/>
+                        <TextView
+                            android:id="@+id/text_view_collapse_notes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginRight="4dp"
+                            android:alpha=".5"
+                            android:text="@string/editor_expand_notes"
+                            android:textAllCaps="true"
+                            android:textSize="12sp"
+                            tools:text="@string/editor_collapse_notes"/>
 
-                    <TextView
-                        android:id="@+id/text_view_collapse_notes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginRight="4dp"
-                        android:alpha=".5"
-                        android:layout_toRightOf="@+id/image_view_arrow_left_of_collapse_notes"
-                        tools:text="Collapse Notes"
-                        android:text="Expand Notes"
-                        android:textAllCaps="true"
-                        android:textSize="12sp"/>
-
-                    <ImageView
-                        android:id="@+id/image_view_arrow_right_of_collapse_notes"
-                        android:layout_width="12dp"
-                        android:layout_height="12dp"
-                        android:alpha="0.5"
-                        android:layout_toRightOf="@+id/text_view_collapse_notes"
-                        android:layout_centerVertical="true"
-                        android:src="?attr/theme_dependent_down_arrow_icon"
-                        tools:src="@drawable/ic_arrow_up_black"/>
-                    </RelativeLayout>
+                        <ImageView
+                            android:id="@+id/image_view_arrow_right_of_collapse_notes"
+                            android:layout_width="12dp"
+                            android:layout_height="12dp"
+                            android:layout_gravity="center_vertical"
+                            android:alpha="0.5"
+                            android:src="?attr/theme_dependent_down_arrow_icon"/>
                 </LinearLayout>
 
                 <!-- Notes LinearLayout -->
@@ -518,9 +599,9 @@
                     android:id="@+id/linear_layout_notes_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    android:orientation="horizontal">
+                    tools:visibility="visible">
 
                     <!-- Note Label -->
                     <TextView
@@ -528,7 +609,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:text="Notes"/>
+                        android:text="@string/editor_category_notes"/>
 
                     <!-- Notes field -->
                     <EditText

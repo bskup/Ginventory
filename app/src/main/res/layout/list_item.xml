@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/list_item_margin"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,33 +39,34 @@
 
                 <TextView
                     android:id="@+id/text_view_summary"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:alpha="0.50"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-medium"
-                    android:maxLines="2"
-                    android:textAllCaps="true"
-                    android:textSize="12sp"
-                    tools:text="40oz Beer - United States"/>
-
-                <TextView
-                    android:id="@+id/text_view_price_bubble"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.87"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
                     android:ellipsize="end"
                     android:fontFamily="sans-serif-medium"
                     android:maxLines="1"
                     android:textAllCaps="true"
                     android:textSize="12sp"
+                    tools:text="750mL Champagne - United Statesfffffff"/>
+
+                <TextView
+                    android:id="@+id/text_view_price_bubble"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
+                    android:alpha="0.5"
+                    android:background="?attr/theme_dependent_contrast_bg"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:textAllCaps="true"
                     android:textColor="#FFFFFF"
-                    android:background="@drawable/rounded_corner_text_view"
-                    tools:text="$4.99"/>
+                    android:textSize="12sp"
+                    tools:text="$4567.99"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -83,7 +85,8 @@
                 android:layout_gravity="center"
                 android:fontFamily="sans-serif-medium"
                 android:textSize="22sp"
-                tools:text="26"/>
+                tools:text="26"
+                tools:textColor="@color/colorPrimary"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -92,7 +95,7 @@
                 android:alpha="0.5"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center"
-                android:text="In Stock"
+                android:text="@string/list_item_in_stock_text"
                 android:textAllCaps="true"
                 android:textSize="12sp"/>
         </LinearLayout>
@@ -198,10 +201,9 @@
                 android:layout_marginRight="4dp"
                 android:alpha="0.50"
                 android:fontFamily="sans-serif"
-                android:text="Order more"
+                android:text="@string/list_item_restock"
                 android:textAllCaps="true"
-                android:textSize="12sp"
-                tools:text="Order More"/>
+                android:textSize="12sp"/>
 
             <ImageView
                 android:id="@+id/image_view_theme_dependent_order_more_icon"

@@ -75,7 +75,7 @@ public class ItemCursorAdapter extends CursorAdapter {
         // Extract name
         final String name = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_NAME));
         // Extract quantity
-        String quantity = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_QUANTITY
+        int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_QUANTITY
         ));
         // Extract size
         String size = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SIZE
@@ -83,18 +83,6 @@ public class ItemCursorAdapter extends CursorAdapter {
         // Extract size type
         int sizeType = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SIZE_TYPE
         ));
-        String sizeTypeString;
-        // Translate size type from int as its saved in db, to String to display in the ui
-        switch (sizeType) {
-            case ItemEntry.SIZE_TYPE_PACK:
-                sizeTypeString = context.getString(R.string.size_type_pack);
-                break;
-            case ItemEntry.SIZE_TYPE_OZ:
-                sizeTypeString = context.getString(R.string.size_type_oz);
-                break;
-            default:
-                sizeTypeString = context.getString(R.string.size_type_ml);
-        }
         // Extract origin
         String origin = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_ORIGIN
         ));
@@ -109,8 +97,29 @@ public class ItemCursorAdapter extends CursorAdapter {
         // Extract spirit type
         int spiritType = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE
         ));
-        String spiritTypeString;
+        // Extract supplier name and phone number
+        final String supplierName = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME));
+        final long supplierPhoneNumber = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER));
+        // Extract target quantity
+        int targetQuantity = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY));
+        // Extract photo path
+        final String photoPath = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_PHOTO_PATH));
+
         // Translate size type from int as its saved in db, to String to display in the ui
+        String sizeTypeString;
+        switch (sizeType) {
+            case ItemEntry.SIZE_TYPE_PACK:
+                sizeTypeString = context.getString(R.string.size_type_pack);
+                break;
+            case ItemEntry.SIZE_TYPE_OZ:
+                sizeTypeString = context.getString(R.string.size_type_oz);
+                break;
+            default:
+                sizeTypeString = context.getString(R.string.size_type_ml);
+        }
+
+        // Translate spirit type from int as its saved in db, to String to display in the ui
+        String spiritTypeString;
         switch (spiritType) {
             case ItemEntry.SPIRIT_TYPE_BEER:
                 spiritTypeString = context.getString(R.string.spirit_type_beer);
@@ -148,8 +157,7 @@ public class ItemCursorAdapter extends CursorAdapter {
             default:
                 spiritTypeString = context.getString(R.string.spirit_type_unknown);
         }
-        // Extract photo path
-        final String photoPath = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_PHOTO_PATH));
+
         // Set click listener on view image container layout
         linearLayoutViewImageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +167,7 @@ public class ItemCursorAdapter extends CursorAdapter {
                 Log.v(LOG_TAG, "photoPath onClick: " + photoPath);
                 if (photoPath != null) {
                     File photoFile = new File(photoPath);
-                    Uri photoUri = FileProvider.getUriForFile(v.getContext(), "com.bskup.ginventory.fileprovider", photoFile);
+                    Uri photoUri = FileProvider.getUriForFile(v.getContext(), v.getContext().getString(R.string.file_provider_path), photoFile);
                     Log.v(LOG_TAG, "photoUri : " + photoUri);
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(photoUri, "image/*");
@@ -174,9 +182,6 @@ public class ItemCursorAdapter extends CursorAdapter {
             }
         });
 
-        // Extract supplier name and phone number
-        final String supplierName = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME));
-        final long supplierPhoneNumber = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER));
         // Set click listener on "Order more" container layout that opens phone app to call supplier name
         linearLayoutOrderMoreContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,15 +225,17 @@ public class ItemCursorAdapter extends CursorAdapter {
         // Populate text fields with extracted properties
         textViewName.setText(name);
         textViewSummary.setText(summary);
-        textViewBigFontQuantity.setText(quantity);
+        textViewBigFontQuantity.setText(String.valueOf(quantity));
         textViewPriceBubble.setText(salePriceString);
 
-        // Change quantity text color based on amount in stock
+        // Change quantity text color based on amount in stock and target quantity
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String warningThreshold = sharedPrefs.getString(context.getString(R.string.settings_warning_threshold_key), context.getString(R.string.settings_warning_threshold_default));
-        if ((Integer.parseInt(quantity) > 0) && (Integer.parseInt(quantity) < Integer.parseInt(warningThreshold))) {
+        double currentInventoryLevelPercentage = ((double) quantity / targetQuantity) * 100;
+        Log.e(LOG_TAG, "currentInventoryLevelPercentage: " + currentInventoryLevelPercentage);
+        if ((currentInventoryLevelPercentage > 0) && (currentInventoryLevelPercentage <= Integer.parseInt(warningThreshold))) {
             textViewBigFontQuantity.setTextColor(ContextCompat.getColor(context, R.color.quantityLevelWarning));
-        } else if (Integer.parseInt(quantity) == 0) {
+        } else if (currentInventoryLevelPercentage == 0) {
             textViewBigFontQuantity.setTextColor(ContextCompat.getColor(context, R.color.quantityLevelOutOfStock));
         } else {
             textViewBigFontQuantity.setTextColor(ContextCompat.getColor(context, R.color.quantityLevelGood));
@@ -236,7 +243,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     }
 
     // Override getView so we have access to the position in list that was clicked on
-    // TODO put this stuff back in bindView using _id instead of position in list+1....?
+    // TODO put this stuff back in bindView using _id instead of position in list+1???
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Log.e(LOG_TAG, "getView called, position " + position);
@@ -284,27 +291,29 @@ public class ItemCursorAdapter extends CursorAdapter {
                 String[] projection = { ItemEntry.COLUMN_ITEM_QUANTITY };
                 String selection = ItemEntry._ID + "=?";
                 String[] selectionArgs = new String[]{ String.valueOf(position + 1) };
+                Log.e(LOG_TAG, "selectionArgs: " + selectionArgs[0]);
                 Cursor cursor = view.getContext().getContentResolver().query(ItemEntry.CONTENT_URI, projection, selection, selectionArgs, null);
                 // Cursor should only contain 1 row, move to first row
-                cursor.moveToFirst();
-                int quantity = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_QUANTITY)));
-                if (quantity <= (Integer.MAX_VALUE - 1)) {
-                    ContentValues values = new ContentValues();
-                    values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity + 1);
-                    // Call update method through contentResolver passing in new values
-                    int rowsUpdated = v.getContext().getContentResolver().update(ItemEntry.CONTENT_URI, values, selection, selectionArgs);
-                    // If update successful, show a toast or something
-                    if (rowsUpdated == 1) {
-                        // Notify listener that data has changed
-                        Uri uri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, position + 1);
-                        v.getContext().getContentResolver().notifyChange(uri, null);
-                        Toast.makeText(v.getContext(), R.string.quantity_increased, Toast.LENGTH_SHORT).show();
-                    } else {
-                        // Update failed
-                        Toast.makeText(v.getContext(), R.string.update_failed, Toast.LENGTH_SHORT).show();
+                if (cursor != null && cursor.moveToFirst()) {
+                    int quantity = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_QUANTITY)));
+                    if (quantity <= (Integer.MAX_VALUE - 1)) {
+                        ContentValues values = new ContentValues();
+                        values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity + 1);
+                        // Call update method through contentResolver passing in new values
+                        int rowsUpdated = v.getContext().getContentResolver().update(ItemEntry.CONTENT_URI, values, selection, selectionArgs);
+                        // If update successful, show a toast or something
+                        if (rowsUpdated == 1) {
+                            // Notify listener that data has changed
+                            Uri uri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, position + 1);
+                            v.getContext().getContentResolver().notifyChange(uri, null);
+                            Toast.makeText(v.getContext(), R.string.quantity_increased, Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Update failed
+                            Toast.makeText(v.getContext(), R.string.update_failed, Toast.LENGTH_SHORT).show();
+                        }
                     }
+                    cursor.close();
                 }
-                cursor.close();
             }
         });
         return view;

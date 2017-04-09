@@ -6,4 +6,5 @@
     <attr name="theme_dependent_call_icon" format="reference"/>
     <attr name="theme_dependent_view_photo_full_size_icon" format="reference" />
     <attr name="theme_dependent_delete_photo_icon" format="reference" />
+    <attr name="theme_dependent_contrast_bg" format="reference" />
 </resources>

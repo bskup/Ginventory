@@ -23,7 +23,6 @@ public class ItemDbHelper extends SQLiteOpenHelper {
     }
 
     // Called when database is created for the first time
-    // TODO supplier db string and possibly create separate supplier db
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Create a String that contains the SQL statement to create the inventory items table
@@ -40,6 +39,8 @@ public class ItemDbHelper extends SQLiteOpenHelper {
                 + ItemEntry.COLUMN_ITEM_SPIRIT_TYPE + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_SUPPLIER_NAME + " TEXT NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER + " INTEGER NOT NULL, "
+                + ItemEntry.COLUMN_ITEM_NOTES + " TEXT, "
+                + ItemEntry.COLUMN_ITEM_TARGET_QUANTITY + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_PHOTO_PATH + " TEXT);";
 
         // Execute the SQL statement that creates the inventory items table

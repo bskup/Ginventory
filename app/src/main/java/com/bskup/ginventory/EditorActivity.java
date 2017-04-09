@@ -50,6 +50,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.R.attr.name;
+
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // Tag for log messages
@@ -65,11 +67,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mSalePriceEditText;
     private EditText mSupplierNameEditText;
     private EditText mSupplierPhoneNumberEditText;
+    private EditText mNotesEditText;
+    private EditText mTargetQuantityEditText;
+
     // Spinner for spirit type
     private Spinner mSpiritTypeSpinner;
     // Spinner for size type
     private Spinner mSizeTypeSpinner;
-
     // Initial value for spirit type spinner, values are in ItemContract
     private int mSpiritType = ItemEntry.SPIRIT_TYPE_UNKNOWN;
     // Initial value for size type spinner, values are in ItemContract
@@ -109,6 +113,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private TextView mTextViewCollapseDetails;
     // Text view collapse notes text
     private TextView mTextViewCollapseNotes;
+    // RelativeLayout containing bar chart and details area
+    private RelativeLayout mRelativeLayoutBarChartAreaContainer;
 
     // Loader ID for loader to use when loading an existing item from InventoryItems db
     private static final int EXISTING_ITEM_LOADER = 0;
@@ -254,21 +260,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         mCurrentItemUri = intent.getData();
 
-        if (mCurrentItemUri == null) {
-            // If opened using FAB, uri will be null, change title to "Add an item"
-            // No need to create a loader, nothing to load
-            setTitle(getString(R.string.editor_title_new_item));
-            // Invalidate options menu so "Delete" can be hidden
-            // (Can't delete a blank item that hasn't been saved yet)
-            // After calling this, onPrepareOptionsMenu is called
-            invalidateOptionsMenu();
-        } else {
-            // If opened using ListView item, uri will be present, change title to "Edit Item"
-            // and load item data using loader
-            setTitle(getString(R.string.editor_title_edit_item));
-            getSupportLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
-        }
-
         // Find views and layouts that we will need to work with
         mNameEditText = (EditText) findViewById(R.id.edit_item_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_item_quantity);
@@ -281,6 +272,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSizeTypeSpinner = (Spinner) findViewById(R.id.spinner_size_type);
         mSupplierNameEditText = (EditText) findViewById(R.id.edit_item_supplier_name);
         mSupplierPhoneNumberEditText = (EditText) findViewById(R.id.edit_item_supplier_phone_number);
+        mNotesEditText = (EditText) findViewById(R.id.edit_item_notes);
+        mTargetQuantityEditText = (EditText) findViewById(R.id.edit_item_target_quantity);
         mLinearLayoutEditorDownArrowContainer = (LinearLayout) findViewById(R.id.linear_layout_editor_down_arrow_container);
         mLinearLayoutEditorUpArrowContainer = (LinearLayout) findViewById(R.id.linear_layout_editor_up_arrow_container);
         mLinearLayoutCollapseDetailsContainer = (LinearLayout) findViewById(R.id.linear_layout_collapse_details_container);
@@ -293,6 +286,26 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mImageViewArrowRightOfCollapseNotes = (ImageView) findViewById(R.id.image_view_arrow_right_of_collapse_notes);
         mTextViewCollapseDetails = (TextView) findViewById(R.id.text_view_collapse_details);
         mTextViewCollapseNotes = (TextView) findViewById(R.id.text_view_collapse_notes);
+        mRelativeLayoutBarChartAreaContainer = (RelativeLayout) findViewById(R.id.relative_layout_bar_chart_area_container);
+
+        if (mCurrentItemUri == null) {
+            // If opened using FAB, uri will be null, change title to "Add an item"
+            // No need to create a loader, nothing to load
+            setTitle(getString(R.string.editor_title_new_item));
+            // Invalidate options menu so "Delete" can be hidden
+            // (Can't delete a blank item that hasn't been saved yet)
+            // After calling this, onPrepareOptionsMenu is called
+            invalidateOptionsMenu();
+            // Hide bar chart and order more button area container
+            mRelativeLayoutBarChartAreaContainer.setVisibility(View.GONE);
+        } else {
+            // If opened using ListView item, uri will be present, change title to "Edit Item"
+            // and load item data using loader
+            setTitle(getString(R.string.editor_title_edit_item));
+            getSupportLoaderManager().initLoader(EXISTING_ITEM_LOADER, null, this);
+            // Show bar chart and order more button area container
+            mRelativeLayoutBarChartAreaContainer.setVisibility(View.VISIBLE);
+        }
 
         // Set touch listener on all fields to know whether or not to show "discard changes?" dialog
         mNameEditText.setOnTouchListener(mOnTouchListener);
@@ -308,6 +321,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierPhoneNumberEditText.setOnTouchListener(mOnTouchListener);
         mLinearLayoutEditorDownArrowContainer.setOnTouchListener(mOnTouchListener);
         mLinearLayoutEditorUpArrowContainer.setOnTouchListener(mOnTouchListener);
+        mNotesEditText.setOnTouchListener(mOnTouchListener);
+        mTargetQuantityEditText.setOnTouchListener(mOnTouchListener);
 
         // Call helper method to set up our spinners
         setupSpinners();
@@ -426,6 +441,39 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
+
+        // Set click listener on order more button in bar chart area
+        mRelativeLayoutBarChartAreaContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                // Do this when order more button relative layout in bar chart area is clicked
+                // Create and show confirmation using supplier name before opening phone app
+                // Create an AlertDialog.Builder and set the message, and click listeners
+                // for the positive and negative buttons on the dialog
+                AlertDialog.Builder dialConfirmationBuilder = new AlertDialog.Builder(v.getContext());
+                dialConfirmationBuilder.setMessage("Are you sure you want to dial " + mSupplierNameEditText.getText().toString() + " for more " + mNameEditText.getText().toString() + "?");
+                dialConfirmationBuilder.setPositiveButton(R.string.dial_positive_button, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked "Yes, dial" button, dial supplier phone number
+                        // Create intent to open phone app using supplier phone number
+                        Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mSupplierPhoneNumberEditText.getText().toString()));
+                        v.getContext().startActivity(dialIntent);
+                    }
+                });
+                dialConfirmationBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked the "Cancel" button, so dismiss the dialog
+                        if (dialog != null) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                // Create and show the AlertDialog
+                AlertDialog dialConfirmationDialog = dialConfirmationBuilder.create();
+                dialConfirmationDialog.show();
+            }
+        });
     }
 
     // Override back button press to show dialog if pressed after item has been touched
@@ -468,6 +516,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ItemEntry.COLUMN_ITEM_SPIRIT_TYPE,
                 ItemEntry.COLUMN_ITEM_SUPPLIER_NAME,
                 ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER,
+                ItemEntry.COLUMN_ITEM_NOTES,
+                ItemEntry.COLUMN_ITEM_TARGET_QUANTITY,
                 ItemEntry.COLUMN_ITEM_PHOTO_PATH};
 
         // Return new loader with Uri of single item clicked on to open EditorActivity
@@ -498,6 +548,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int spiritTypeColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE);
             int supplierNameColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME);
             int supplierPhoneNumberColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER);
+            int notesColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_NOTES);
+            int targetQuantityColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY);
             int photoPathColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_PHOTO_PATH);
 
             // Extract values from cursor using each column index, convert where necessary
@@ -520,6 +572,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int spiritType = data.getInt(spiritTypeColumnIndex);
             String supplierName = data.getString(supplierNameColumnIndex);
             long supplierPhoneNumber = data.getLong(supplierPhoneNumberColumnIndex);
+            String notes = data.getString(notesColumnIndex);
+            int targetQuantity = data.getInt(targetQuantityColumnIndex);
             String photoPath = data.getString(photoPathColumnIndex);
 
             // Update EditText fields with values extracted from cursor
@@ -532,6 +586,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mSalePriceEditText.setText(salePriceString);
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneNumberEditText.setText(String.valueOf(supplierPhoneNumber));
+            mNotesEditText.setText(notes);
+            mTargetQuantityEditText.setText(String.valueOf(targetQuantity));
 
             // If photo path is not null, create scaled bitmap from it
             if (photoPath != null) {
@@ -620,6 +676,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSalePriceEditText.setText("");
         mSupplierNameEditText.setText("");
         mSupplierPhoneNumberEditText.setText("");
+        mNotesEditText.setText("");
+        mTargetQuantityEditText.setText("");
         mSpiritTypeSpinner.setSelection(0);
         mSizeTypeSpinner.setSelection(0);
         mCurrentPhotoPath = null;
@@ -755,13 +813,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     // Helper method to set up spinners
     private void setupSpinners() {
-        // Create adapter for each spinner
+        // Create adapter for each spinner and set the layout shown before click
         ArrayAdapter spiritTypeSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_spirit_type_options, android.R.layout.simple_spinner_item);
+                R.array.array_spirit_type_options, R.layout.spinner_item);
         ArrayAdapter sizeTypeSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.array_size_type_options, android.R.layout.simple_spinner_item);
+                R.array.array_size_type_options, R.layout.spinner_item);
 
-        // Specify spinner dropdown layout style
+        // Specify spinner dropdown layout style shown on click
         spiritTypeSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         sizeTypeSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 
@@ -899,12 +957,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String salePriceString = mSalePriceEditText.getText().toString().trim();
         String supplierNameString = mSupplierNameEditText.getText().toString().trim();
         String supplierPhoneNumberString = mSupplierPhoneNumberEditText.getText().toString().trim();
+        String notesString = mNotesEditText.getText().toString().trim();
+        String targetQuantityString = mTargetQuantityEditText.getText().toString().trim();
 
         // Before creating ContentValues, check if all fields are empty and spirit type unknown
         if (TextUtils.isEmpty(nameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(sizeString)
                 && TextUtils.isEmpty(originString) && TextUtils.isEmpty(abvString)
                 && TextUtils.isEmpty(purchasePriceString) && TextUtils.isEmpty(salePriceString)
                 && TextUtils.isEmpty(supplierNameString) && TextUtils.isEmpty(supplierPhoneNumberString)
+                && TextUtils.isEmpty(notesString) && TextUtils.isEmpty(targetQuantityString)
                 && mSpiritType == ItemEntry.SPIRIT_TYPE_UNKNOWN) {
             // If all fields are empty, return true as if we saved successfully so it
             // triggers finish() from onOptionsItemSelected and closes activity
@@ -1044,6 +1105,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String supplierPhoneNumberStringOnlyNumbers = supplierPhoneNumberString.replaceAll("[^0-9]", "");
             supplierPhoneNumber = Long.parseLong(supplierPhoneNumberStringOnlyNumbers);
         }
+        // Set error msg if target quantity left blank by user, otherwise parse it from
+        // the String we pull from the EditText field
+        int targetQuantity;
+        if (TextUtils.isEmpty(targetQuantityString)) {
+            mTargetQuantityEditText.setError(getString(R.string.error_required_target_quantity));
+            // Request focus so error message is automatically displayed
+            mTargetQuantityEditText.requestFocus();
+            // Return without saving
+            return false;
+        } else if (Integer.parseInt(targetQuantityString) <= 0) {
+            // If target quantity is negative or 0
+            mTargetQuantityEditText.setError(getString(R.string.error_invalid_target_quantity));
+            // Request focus so error message is automatically displayed
+            mTargetQuantityEditText.requestFocus();
+            // Return without saving
+            return false;
+        } else {
+            targetQuantity = Integer.parseInt(targetQuantityString);
+        }
 
         // Add values to contentValues object
         values.put(ItemEntry.COLUMN_ITEM_NAME, name);
@@ -1057,6 +1137,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE, mSpiritType);
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME, supplierName);
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER, supplierPhoneNumber);
+        values.put(ItemEntry.COLUMN_ITEM_NOTES, notesString);
+        values.put(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY, targetQuantity);
         values.put(ItemEntry.COLUMN_ITEM_PHOTO_PATH, mCurrentPhotoPath);
 
         // If opened using ListView item, uri will be present, proceed to "Edit Item" (update mode)

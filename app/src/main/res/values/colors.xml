@@ -9,4 +9,6 @@
     <color name="quantityLevelGood">#2E7D32</color>
     <color name="quantityLevelWarning">#F57C00</color>
     <color name="quantityLevelOutOfStock">#FF0000</color>
+    <color name="contrastBgBlack">#8C000000</color>
+    <color name="contrastBgWhite">#4DFFFFFF</color>
 </resources>

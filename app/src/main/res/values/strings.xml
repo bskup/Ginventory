@@ -31,7 +31,7 @@
     <string name="hint_item_purchase_price">Purchase price</string>
     <string name="hint_item_sale_price">Sale price</string>
     <string name="hint_item_supplier_name">Supplier name</string>
-    <string name="hint_item_supplier_phone_number">555-555-5555</string>
+    <string name="hint_item_supplier_phone_number">Supplier phone number</string>
     <string name="spirit_type_unknown">Unknown</string>
     <string name="spirit_type_beer">Beer</string>
     <string name="spirit_type_wine">Wine</string>
@@ -53,7 +53,7 @@
     <string name="settings_menu_item">Settings</string>
     <string name="settings_warning_threshold_default">5</string>
     <string name="settings_warning_threshold_key">warning_threshold</string>
-    <string name="settings_warning_threshold_label">Warning Threshold</string>
+    <string name="settings_warning_threshold_label">Warning Threshold %</string>
     <string name="settings_theme_label">Theme</string>
     <string name="settings_theme_key">theme</string>
     <string name="settings_theme_light_label">Light theme</string>
@@ -92,5 +92,26 @@
     <string name="expand_notes">Expand Notes</string>
     <string name="collapse_notes">Collapse Notes</string>
     <string name="hint_notes">Notes (Optional)</string>
+    <string name="list_item_restock">Restock</string>
+    <string name="hint_item_target_quantity">Quantity for full stock</string>
+    <string name="editor_category_in_stock">In Stock:</string>
+    <string name="editor_category_size">Size</string>
+    <string name="editor_category_type">Type</string>
+    <string name="editor_category_origin">Origin</string>
+    <string name="editor_category_abv">ABV%</string>
+    <string name="editor_category_purchase_price">Purchase price</string>
+    <string name="editor_category_sale_price">Sale price</string>
+    <string name="editor_category_supplier_name">Supplier name</string>
+    <string name="editor_category_supplier_phone">Supplier phone</string>
+    <string name="editor_category_target_quantity">Target quantity</string>
+    <string name="editor_category_notes">Notes</string>
+    <string name="editor_add_a_photo">Add a Photo</string>
+    <string name="editor_restock_button_text">Restock</string>
+    <string name="editor_collapse_details">Collapse Details</string>
+    <string name="editor_expand_notes">Expand Notes</string>
+    <string name="editor_collapse_notes">Collapse Notes</string>
+    <string name="list_item_in_stock_text">In Stock</string>
+    <string name="error_required_target_quantity">Target quantity is required</string>
+    <string name="error_invalid_target_quantity">Invalid target quantity</string>
 
 </resources>
