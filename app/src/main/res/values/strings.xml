@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Ginventory</string>
     <string name="empty_view_title_text">No items in database</string>
     <string name="empty_view_subtitle_text">Add an item to get started!</string>

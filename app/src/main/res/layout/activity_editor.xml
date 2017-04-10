@@ -118,33 +118,66 @@
                             android:layout_height="22dp"
                             android:background="@color/colorPrimary"/>
 
-                        <TextView
-                            android:id="@+id/text_view_bar_chart_label_inventory"
+                        <LinearLayout
+                            android:id="@+id/linear_layout_bar_chart_inventory_level"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/view_bar_chart_target_stock"
-                            android:layout_marginTop="4dp"
-                            android:alpha="0.5"
-                            android:text="Inventory Level: 40%"
-                            android:textSize="12sp"/>
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/text_view_bar_chart_label_restock"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/text_view_bar_chart_label_inventory"
-                            android:layout_marginTop="4dp"
-                            android:alpha="0.5"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="Restock: $12300.00 (123 @ $100.00)"
-                            android:textSize="12sp"/>
+                            <TextView
+                                android:id="@+id/text_view_bar_chart_label_inventory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:alpha="0.5"
+                                android:text="Inventory Level: "
+                                android:textSize="12sp"/>
+
+                            <TextView
+                                android:id="@+id/text_view_bar_chart_inventory_percentage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:alpha="0.5"
+                                android:text="40%"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
 
                         <LinearLayout
-                            android:id="@+id/linear_layout_editor_restock_container"
+                            android:id="@+id/linear_layout_bar_chart_restock_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/text_view_bar_chart_label_restock"
+                            android:layout_below="@+id/linear_layout_bar_chart_inventory_level"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/text_view_bar_chart_label_restock"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:alpha="0.5"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="Restock: "
+                                android:textSize="12sp"/>
+                            <TextView
+                                android:id="@+id/text_view_bar_chart_restock_cost"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:alpha="0.5"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="$1234.00 (100 @ $12.34)"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_editor_restock_button_container"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/linear_layout_bar_chart_restock_cost"
                             android:layout_marginTop="4dp"
                             android:background="@drawable/rounded_corner_text_view"
                             android:orientation="horizontal"
@@ -154,7 +187,7 @@
                             android:paddingTop="2dp">
 
                             <TextView
-                                android:id="@+id/text_view_bar_chart_label_total"
+                                android:id="@+id/text_view_restock_button_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="2dp"
@@ -164,7 +197,7 @@
                                 android:textSize="12sp"/>
 
                             <ImageView
-                                android:id="@+id/image_view_theme_dependent_order_more_icon"
+                                android:id="@+id/image_view_restock_button_image"
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:layout_gravity="center"
@@ -292,8 +325,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginBottom="0dp"
-                            android:paddingLeft="8dp"
                             android:alpha="0.87"
+                            android:paddingLeft="8dp"
                             android:spinnerMode="dropdown"/>
                         <!-- Spirit type Label -->
                         <TextView
@@ -309,8 +342,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginBottom="0dp"
-                            android:paddingLeft="8dp"
                             android:alpha="0.87"
+                            android:paddingLeft="8dp"
                             android:spinnerMode="dropdown"/>
                     </LinearLayout>
 
@@ -344,32 +377,32 @@
                     android:paddingRight="4dp"
                     android:paddingTop="12dp">
 
-                        <ImageView
-                            android:id="@+id/image_view_arrow_left_of_collapse_details"
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:alpha="0.5"
-                            android:layout_gravity="center_vertical"
-                            android:src="?attr/theme_dependent_up_arrow_icon"/>
+                    <ImageView
+                        android:id="@+id/image_view_arrow_left_of_collapse_details"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="0.5"
+                        android:src="?attr/theme_dependent_up_arrow_icon"/>
 
-                        <TextView
-                            android:id="@+id/text_view_collapse_details"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="4dp"
-                            android:alpha="0.5"
-                            android:text="@string/editor_collapse_details"
-                            android:textAllCaps="true"
-                            android:textSize="12sp"/>
+                    <TextView
+                        android:id="@+id/text_view_collapse_details"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:alpha="0.5"
+                        android:text="@string/editor_collapse_details"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"/>
 
-                        <ImageView
-                            android:id="@+id/image_view_arrow_right_of_collapse_details"
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:alpha="0.5"
-                            android:src="?attr/theme_dependent_up_arrow_icon"/>
+                    <ImageView
+                        android:id="@+id/image_view_arrow_right_of_collapse_details"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="0.5"
+                        android:src="?attr/theme_dependent_up_arrow_icon"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -565,33 +598,33 @@
                     android:paddingRight="4dp"
                     android:paddingTop="12dp">
 
-                        <ImageView
-                            android:id="@+id/image_view_arrow_left_of_collapse_notes"
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:alpha="0.5"
-                            android:src="?attr/theme_dependent_down_arrow_icon"/>
+                    <ImageView
+                        android:id="@+id/image_view_arrow_left_of_collapse_notes"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="0.5"
+                        android:src="?attr/theme_dependent_down_arrow_icon"/>
 
-                        <TextView
-                            android:id="@+id/text_view_collapse_notes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="4dp"
-                            android:alpha=".5"
-                            android:text="@string/editor_expand_notes"
-                            android:textAllCaps="true"
-                            android:textSize="12sp"
-                            tools:text="@string/editor_collapse_notes"/>
+                    <TextView
+                        android:id="@+id/text_view_collapse_notes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="4dp"
+                        android:alpha=".5"
+                        android:text="@string/editor_expand_notes"
+                        android:textAllCaps="true"
+                        android:textSize="12sp"
+                        tools:text="@string/editor_collapse_notes"/>
 
-                        <ImageView
-                            android:id="@+id/image_view_arrow_right_of_collapse_notes"
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center_vertical"
-                            android:alpha="0.5"
-                            android:src="?attr/theme_dependent_down_arrow_icon"/>
+                    <ImageView
+                        android:id="@+id/image_view_arrow_right_of_collapse_notes"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center_vertical"
+                        android:alpha="0.5"
+                        android:src="?attr/theme_dependent_down_arrow_icon"/>
                 </LinearLayout>
 
                 <!-- Notes LinearLayout -->
