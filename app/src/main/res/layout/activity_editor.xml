@@ -37,7 +37,6 @@
                         android:id="@+id/picture_container_relative_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
-
                         <ImageView
                             android:id="@+id/picture_image_view"
                             android:layout_width="100dp"
@@ -53,7 +52,6 @@
                             android:layout_centerInParent="true"
                             android:gravity="center"
                             android:orientation="vertical">
-
                             <ImageView
                                 android:id="@+id/add_a_photo_icon_image_view"
                                 android:layout_width="wrap_content"
@@ -61,7 +59,6 @@
                                 android:background="@color/colorAccentSecondary"
                                 android:scaleType="center"
                                 android:src="@drawable/ic_add_a_photo_white"/>
-
                             <TextView
                                 style="@style/EditorFieldStyle"
                                 android:layout_width="wrap_content"
@@ -76,7 +73,6 @@
                         android:id="@+id/view_and_delete_photo_container_relative_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
-
                         <ImageView
                             android:id="@+id/view_full_size_photo_image_view"
                             android:layout_width="30dp"
@@ -87,7 +83,6 @@
                             android:alpha="0.5"
                             android:padding="4dp"
                             android:src="?attr/theme_dependent_view_photo_full_size_icon"/>
-
                         <ImageView
                             android:id="@+id/delete_photo_image_view"
                             android:layout_width="30dp"
@@ -96,7 +91,6 @@
                             android:alpha="0.5"
                             android:padding="4dp"
                             android:src="?attr/theme_dependent_delete_photo_icon"/>
-
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -104,14 +98,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/list_item_margin">
-
                         <View
                             android:id="@+id/view_bar_chart_target_stock"
                             android:layout_width="match_parent"
                             android:layout_height="22dp"
                             android:alpha="0.5"
                             android:background="?attr/theme_dependent_contrast_bg"/>
-
                         <View
                             android:id="@+id/view_bar_chart_dynamic_in_stock_bar"
                             android:layout_width="80dp"
@@ -124,7 +116,6 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/view_bar_chart_target_stock"
                             android:orientation="horizontal">
-
                             <TextView
                                 android:id="@+id/text_view_bar_chart_label_inventory"
                                 android:layout_width="wrap_content"
@@ -133,7 +124,6 @@
                                 android:alpha="0.5"
                                 android:text="@string/editor_inventory_level_label"
                                 android:textSize="12sp"/>
-
                             <TextView
                                 android:id="@+id/text_view_bar_chart_inventory_percentage"
                                 android:layout_width="wrap_content"
@@ -150,7 +140,6 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/linear_layout_bar_chart_inventory_level"
                             android:orientation="horizontal">
-
                             <TextView
                                 android:id="@+id/text_view_bar_chart_label_restock"
                                 android:layout_width="wrap_content"
@@ -161,7 +150,6 @@
                                 android:maxLines="1"
                                 android:text="@string/editor_restock_label"
                                 android:textSize="12sp"/>
-
                             <TextView
                                 android:id="@+id/text_view_bar_chart_restock_cost"
                                 android:layout_width="wrap_content"
@@ -186,7 +174,6 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
                             android:paddingTop="2dp">
-
                             <TextView
                                 android:id="@+id/text_view_restock_button_label"
                                 android:layout_width="wrap_content"
@@ -196,7 +183,6 @@
                                 android:textAllCaps="true"
                                 android:textColor="#FFFFFF"
                                 android:textSize="12sp"/>
-
                             <ImageView
                                 android:id="@+id/image_view_restock_button_image"
                                 android:layout_width="14dp"
@@ -222,7 +208,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Name field -->
                         <EditText
                             android:id="@+id/edit_item_name"
@@ -238,7 +223,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Quantity Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -246,7 +230,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_in_stock"/>
-
                         <!-- Quantity field -->
                         <EditText
                             android:id="@+id/edit_item_quantity"
@@ -262,7 +245,6 @@
                             android:layout_gravity="center_vertical"
                             android:orientation="vertical"
                             android:padding="4dp">
-
                             <ImageView
                                 android:id="@+id/image_view_editor_arrow_down"
                                 android:layout_width="22dp"
@@ -278,7 +260,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:padding="4dp">
-
                             <ImageView
                                 android:id="@+id/image_view_editor_arrow_up"
                                 android:layout_width="22dp"
@@ -287,7 +268,6 @@
                                 android:background="@drawable/circle_background"
                                 android:src="@drawable/selector_arrow_up_white"/>
                         </LinearLayout>
-
                     </LinearLayout>
 
                     <!-- Size LinearLayout -->
@@ -295,7 +275,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Size Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -303,7 +282,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_size"/>
-
                         <!-- Size field -->
                         <EditText
                             android:id="@+id/edit_item_size"
@@ -311,7 +289,6 @@
                             android:layout_weight="1"
                             android:hint="@string/hint_item_size"
                             android:inputType="number"/>
-
                         <!-- Size type drop-down spinner -->
                         <Spinner
                             android:id="@+id/spinner_size_type"
@@ -339,13 +316,9 @@
                             android:alpha="0.87"
                             android:paddingLeft="8dp"
                             android:spinnerMode="dropdown"/>
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
@@ -371,7 +344,6 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingTop="12dp">
-
                     <ImageView
                         android:id="@+id/image_view_arrow_left_of_collapse_details"
                         android:layout_width="12dp"
@@ -379,7 +351,6 @@
                         android:layout_gravity="center_vertical"
                         android:alpha="0.5"
                         android:src="?attr/theme_dependent_up_arrow_icon"/>
-
                     <TextView
                         android:id="@+id/text_view_collapse_details"
                         android:layout_width="wrap_content"
@@ -390,7 +361,6 @@
                         android:text="@string/editor_collapse_details"
                         android:textAllCaps="true"
                         android:textSize="12sp"/>
-
                     <ImageView
                         android:id="@+id/image_view_arrow_right_of_collapse_details"
                         android:layout_width="12dp"
@@ -405,12 +375,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <!-- Origin LinearLayout -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Origin Label -->
                         <TextView
                             android:id="@+id/textView"
@@ -419,7 +389,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_origin"/>
-
                         <!-- Origin field -->
                         <EditText
                             android:id="@+id/edit_item_origin"
@@ -434,7 +403,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- ABV Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -442,7 +410,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_abv"/>
-
                         <!-- ABV field -->
                         <EditText
                             android:id="@+id/edit_item_abv"
@@ -451,12 +418,12 @@
                             android:hint="@string/hint_item_abv"
                             android:inputType="numberDecimal"/>
                     </LinearLayout>
+
                     <!-- Purchase price LinearLayout -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Purchase price Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -464,7 +431,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_purchase_price"/>
-
                         <!-- Purchase price field -->
                         <EditText
                             android:id="@+id/edit_item_purchase_price"
@@ -473,6 +439,7 @@
                             android:hint="@string/hint_item_purchase_price"
                             android:inputType="numberDecimal"/>
                     </LinearLayout>
+
                     <!-- Sale price LinearLayout -->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -486,7 +453,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_sale_price"/>
-
                         <!-- Sale price field -->
                         <EditText
                             android:id="@+id/edit_item_sale_price"
@@ -495,12 +461,12 @@
                             android:hint="@string/hint_item_sale_price"
                             android:inputType="numberDecimal"/>
                     </LinearLayout>
+
                     <!-- Supplier name LinearLayout -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Supplier name Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -508,7 +474,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_supplier_name"/>
-
                         <!-- Sale price field -->
                         <EditText
                             android:id="@+id/edit_item_supplier_name"
@@ -517,12 +482,12 @@
                             android:hint="@string/hint_item_supplier_name"
                             android:inputType="textCapWords"/>
                     </LinearLayout>
+
                     <!-- Supplier phone number LinearLayout -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Supplier phone number Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -530,7 +495,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_supplier_phone"/>
-
                         <!-- Supplier phone number field -->
                         <EditText
                             android:id="@+id/edit_item_supplier_phone_number"
@@ -539,12 +503,12 @@
                             android:hint="@string/hint_item_supplier_phone_number"
                             android:inputType="phone"/>
                     </LinearLayout>
+
                     <!-- Supplier phone number LinearLayout -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
                         <!-- Target quantity Label -->
                         <TextView
                             style="@style/CategoryStyle"
@@ -552,7 +516,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="0"
                             android:text="@string/editor_category_target_quantity"/>
-
                         <!-- Target quantity field -->
                         <EditText
                             android:id="@+id/edit_item_target_quantity"
@@ -561,9 +524,7 @@
                             android:hint="@string/hint_item_target_quantity"
                             android:inputType="phone"/>
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
@@ -592,7 +553,6 @@
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:paddingTop="12dp">
-
                     <ImageView
                         android:id="@+id/image_view_arrow_left_of_collapse_notes"
                         android:layout_width="12dp"
@@ -600,7 +560,6 @@
                         android:layout_gravity="center_vertical"
                         android:alpha="0.5"
                         android:src="?attr/theme_dependent_down_arrow_icon"/>
-
                     <TextView
                         android:id="@+id/text_view_collapse_notes"
                         android:layout_width="wrap_content"
@@ -612,7 +571,6 @@
                         android:textAllCaps="true"
                         android:textSize="12sp"
                         tools:text="@string/editor_collapse_notes"/>
-
                     <ImageView
                         android:id="@+id/image_view_arrow_right_of_collapse_notes"
                         android:layout_width="12dp"
@@ -630,7 +588,6 @@
                     android:orientation="horizontal"
                     android:visibility="gone"
                     tools:visibility="visible">
-
                     <!-- Note Label -->
                     <TextView
                         style="@style/CategoryStyle"
@@ -638,7 +595,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:text="@string/editor_category_notes"/>
-
                     <!-- Notes field -->
                     <EditText
                         android:id="@+id/edit_item_notes"
@@ -651,9 +607,7 @@
                         android:maxLines="5"
                         android:scrollbars="vertical"/>
                 </LinearLayout>
-
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
-
 </ScrollView>

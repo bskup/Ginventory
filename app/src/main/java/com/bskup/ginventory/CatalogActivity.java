@@ -49,7 +49,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             setTheme(R.style.AppThemeDark);
         }
         setContentView(R.layout.activity_catalog);
-
         // Setup FAB to open EditorActivity
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,17 +58,14 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-
         // Find the ListView which will be populated with the inventory item data
         ListView listViewItems = (ListView) findViewById(R.id.list_view_inventory_items);
         // Find and set empty view on the ListView, so that it only shows when the list has 0 items
         listViewItems.setEmptyView(findViewById(R.id.empty_view));
-
         // Create adapter, there is no data yet until load finishes so pass in null for the Cursor
         mItemCursorAdapter = new ItemCursorAdapter(this, null);
         // Attach adapter to listView
         listViewItems.setAdapter(mItemCursorAdapter);
-
         // Setup on item click listener
         listViewItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -85,7 +81,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 startActivity(intent);
             }
         });
-
         // Initialize loader
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
@@ -109,7 +104,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 ItemEntry.COLUMN_ITEM_NOTES,
                 ItemEntry.COLUMN_ITEM_TARGET_QUANTITY,
                 ItemEntry.COLUMN_ITEM_PHOTO_PATH };
-
         return new CursorLoader(this, ItemEntry.CONTENT_URI, projection, null, null, null);
     }
 
@@ -147,7 +141,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -157,7 +150,6 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     private void deleteAllItems() {
         // Delete all rows based on uri using ContentResolver, returns # of rows deleted
         int rowsDeleted = getContentResolver().delete(ItemEntry.CONTENT_URI, null, null);
-
         // Show a toast message depending on whether or not the delete was successful
         if (rowsDeleted == 0) {
             // If no rows deleted, there was an error with delete
@@ -183,10 +175,9 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(ItemEntry.COLUMN_ITEM_SALE_PRICE, "1299");
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME, "Sysco");
         values.put(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER, "1112223333");
-        values.put(ItemEntry.COLUMN_ITEM_NOTES, "Wtf is this?");
+        values.put(ItemEntry.COLUMN_ITEM_NOTES, "Test notes. This is a test note string. Lorem ipsum dolor sit amet.");
         values.put(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY, "100");
         values.put(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE, ItemEntry.SPIRIT_TYPE_GIN);
-
         // Insert a new row for our test item using ContentResolver, returns uri of new row
         getContentResolver().insert(ItemEntry.CONTENT_URI, values);
     }
@@ -238,5 +229,4 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
             }
         }
     }
-
 }

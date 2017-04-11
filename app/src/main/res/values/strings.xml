@@ -1,4 +1,4 @@
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources>
     <string name="app_name">Ginventory</string>
     <string name="empty_view_title_text">No items in database</string>
     <string name="empty_view_subtitle_text">Add an item to get started!</string>
@@ -115,7 +115,13 @@
     <string name="error_invalid_target_quantity">Invalid target quantity</string>
     <string name="editor_inventory_level_label">Inventory Level:</string>
     <string name="editor_inventory_percentage">40%</string>
-    <string name="editor_restock_label">Restock:</string>
+    <string name="editor_restock_label">Restock: </string>
     <string name="editor_restock_cost">$1234.00 (100 @ $12.34)</string>
+    <string name="intent_dial_uri_prefix">tel:</string>
+    <string name="create_file_date_time_format">yyyyMMdd_HHmmss</string>
+    <string name="create_file_name_prefix">JPEG_</string>
+    <string name="create_file_name_divider">_</string>
+    <string name="create_file_name_extension">.jpg</string>
+    <string name="open_full_size_photo_intent_data_type">image/*</string>
 
 </resources>

@@ -56,9 +56,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     // (Cursor is already moved to the correct row)
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
-
         Log.e(LOG_TAG, "bindView called, position:" + cursor.getPosition());
-
         // Find the views we need to work with in our inflated layout template
         TextView textViewName = (TextView) view.findViewById(R.id.text_view_name);
         TextView textViewSummary = (TextView) view.findViewById(R.id.text_view_summary);
@@ -67,26 +65,17 @@ public class ItemCursorAdapter extends CursorAdapter {
         RelativeLayout relativeLayoutWholeBottomRow = (RelativeLayout) view.findViewById(R.id.relative_layout_whole_bottom_row);
         TextView textViewPriceBubble = (TextView) view.findViewById(R.id.text_view_price_bubble);
         LinearLayout linearLayoutOrderMoreContainer = (LinearLayout) view.findViewById(R.id.linear_layout_order_more_container);
-
-
         // Extract properties from Cursor that we need to work with
-        //Extract ID
         final long id = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry._ID));
-        // Extract name
         final String name = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_NAME));
-        // Extract quantity
         int quantity = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_QUANTITY
         ));
-        // Extract size
         String size = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SIZE
         ));
-        // Extract size type
         int sizeType = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SIZE_TYPE
         ));
-        // Extract origin
         String origin = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_ORIGIN
         ));
-        // Extract sale price
         long salePriceAsCents = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SALE_PRICE
         ));
         Log.e(LOG_TAG, "salePriceAsCents in itemCursorAdapter: " + salePriceAsCents);
@@ -94,17 +83,12 @@ public class ItemCursorAdapter extends CursorAdapter {
         double salePriceAsDouble = salePriceAsCents / 100.0;
         Log.e(LOG_TAG, "salePriceAsDouble in itemCursorAdapter: " + salePriceAsDouble);
         String salePriceString = "$" + String.format(Locale.US, "%.2f", salePriceAsDouble);
-        // Extract spirit type
         int spiritType = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SPIRIT_TYPE
         ));
-        // Extract supplier name and phone number
         final String supplierName = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME));
         final long supplierPhoneNumber = cursor.getLong(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_SUPPLIER_PHONE_NUMBER));
-        // Extract target quantity
         int targetQuantity = cursor.getInt(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY));
-        // Extract photo path
         final String photoPath = cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_PHOTO_PATH));
-
         // Translate size type from int as its saved in db, to String to display in the ui
         String sizeTypeString;
         switch (sizeType) {
@@ -117,7 +101,6 @@ public class ItemCursorAdapter extends CursorAdapter {
             default:
                 sizeTypeString = context.getString(R.string.size_type_ml);
         }
-
         // Translate spirit type from int as its saved in db, to String to display in the ui
         String spiritTypeString;
         switch (spiritType) {
@@ -157,7 +140,6 @@ public class ItemCursorAdapter extends CursorAdapter {
             default:
                 spiritTypeString = context.getString(R.string.spirit_type_unknown);
         }
-
         // Set click listener on view image container layout
         linearLayoutViewImageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -181,7 +163,6 @@ public class ItemCursorAdapter extends CursorAdapter {
                 }
             }
         });
-
         // Set click listener on "Order more" container layout that opens phone app to call supplier name
         linearLayoutOrderMoreContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,26 +189,21 @@ public class ItemCursorAdapter extends CursorAdapter {
                         }
                     }
                 });
-
                 // Create and show the AlertDialog
                 AlertDialog dialConfirmationDialog = dialConfirmationBuilder.create();
                 dialConfirmationDialog.show();
             }
         });
-
         // Set blank click listener on whole bottom row so it does nothing when clicked
         // unless clicked on one of the buttons, helps avoid misclicks
         relativeLayoutWholeBottomRow.setOnClickListener(null);
-
         // Summary String containing info to be displayed in list under name of item
         String summary = size + sizeTypeString + " " + spiritTypeString + " - " + origin;
-
         // Populate text fields with extracted properties
         textViewName.setText(name);
         textViewSummary.setText(summary);
         textViewBigFontQuantity.setText(String.valueOf(quantity));
         textViewPriceBubble.setText(salePriceString);
-
         // Change quantity text color based on amount in stock and target quantity
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
         String warningThreshold = sharedPrefs.getString(context.getString(R.string.settings_warning_threshold_key), context.getString(R.string.settings_warning_threshold_default));
@@ -243,7 +219,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     }
 
     // Override getView so we have access to the position in list that was clicked on
-    // TODO put this stuff back in bindView using _id instead of position in list+1???
+    // Could possibly put this stuff back in bindView and use _id instead of position in list+1
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Log.e(LOG_TAG, "getView called, position " + position);
@@ -260,7 +236,9 @@ public class ItemCursorAdapter extends CursorAdapter {
                 String[] selectionArgs = new String[]{ String.valueOf(position + 1) };
                 Cursor cursor = view.getContext().getContentResolver().query(ItemEntry.CONTENT_URI, projection, selection, selectionArgs, null);
                 // Cursor should only contain 1 row, move to first row
-                cursor.moveToFirst();
+                if (cursor == null || !cursor.moveToFirst()) {
+                    return;
+                }
                 int quantity = Integer.parseInt(cursor.getString(cursor.getColumnIndexOrThrow(ItemEntry.COLUMN_ITEM_QUANTITY)));
                 if (quantity >= 1) {
                     ContentValues values = new ContentValues();
@@ -318,5 +296,4 @@ public class ItemCursorAdapter extends CursorAdapter {
         });
         return view;
     }
-
 }

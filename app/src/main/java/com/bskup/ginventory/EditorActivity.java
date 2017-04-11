@@ -72,77 +72,52 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mNotesEditText;
     private EditText mTargetQuantityEditText;
 
-    // Spinner for spirit type
+    // Member variables to pass around
     private Spinner mSpiritTypeSpinner;
-    // Spinner for size type
     private Spinner mSizeTypeSpinner;
-    // Initial value for spirit type spinner, values are in ItemContract
     private int mSpiritType = ItemEntry.SPIRIT_TYPE_UNKNOWN;
-    // Initial value for size type spinner, values are in ItemContract
     private int mSizeType = ItemEntry.SIZE_TYPE_ML;
-
-    // View that will hold the image we get back from camera
     private ImageView mPictureImageView;
-    // "Add a photo text and icon" linear layout
     private LinearLayout mAddAPhotoLinearLayout;
-    // View photo full size and delete photo container relative layout
     private RelativeLayout mViewPhotoFullSizeAndDeletePhotoRelativeLayout;
-    // View photo full size image view
     private ImageView mViewPhotoFullSizeImageView;
-    // Delete photo image view
     private ImageView mDeletePhotoImageView;
-    // Editor down arrow container
     private LinearLayout mLinearLayoutEditorDownArrowContainer;
-    // Editor up arrow container
     private LinearLayout mLinearLayoutEditorUpArrowContainer;
-    // Collapse details container
     private LinearLayout mLinearLayoutCollapseDetailsContainer;
-    // Details container to show/hide
     private LinearLayout mLinearLayoutDetailsContainer;
-    // Collapse notes container
     private LinearLayout mLinearLayoutCollapseNotesContainer;
-    // Notes container to show/hide
     private LinearLayout mLinearLayoutNotesContainer;
-    // Image view arrow left of collapse details
     private ImageView mImageViewArrowLeftOfCollapseDetails;
-    // Image view arrow right of collapse details
     private ImageView mImageViewArrowRightOfCollapseDetails;
-    // Image view arrow left of collapse notes
     private ImageView mImageViewArrowLeftOfCollapseNotes;
-    // Image view arrow right of collapse notes
     private ImageView mImageViewArrowRightOfCollapseNotes;
-    // Text view collapse details text
     private TextView mTextViewCollapseDetails;
-    // Text view collapse notes text
     private TextView mTextViewCollapseNotes;
-    // RelativeLayout containing bar chart and details area
     private RelativeLayout mRelativeLayoutBarChartAreaContainer;
-    // File path to current photo for use with ACTION_VIEW intents
     private String mCurrentPhotoPath;
-    // File object to hold full size photo data
     private File mCurrentPhotoFile;
-    // Uri of current File object
     private Uri mCurrentPhotoUri;
-    // Uri to hold current item Uri, will be null when entering a new item because
-    // we didn't open the editor activity with a Uri
     private Uri mCurrentItemUri;
-    // TextView with editor bar chart area current inventory percentage
     private TextView mTextViewInventoryPercentage;
-    // TextView with editor bar chart area restock cost data
     private TextView mTextViewRestockCost;
-    // Dynamic bar chart "in stock" level view
     private View mViewDynamicInventoryBar;
-    // Bar chart total width in px
     private int mBarChartTotalWidthInPx;
-    // Bar chart total width in dp
     private double mBarChartTotalWidthInDp;
-    // Width in dp to set dynamic bar after calculations done in onWindowFocusChanged
     private int mBarChartWidthToSetDynamicBar;
     private double mInventoryPercentage;
     private int mBarChartWidthToSetDynamicBarInPx;
     private int mWarningThreshold;
     private int mTargetQuantity;
+    private int mQuantityToReachTarget;
+    private double mPurchasePriceAsDouble;
+    private int mQuantity;
+    private double mRestockPrice;
+    private String mInventoryPercentageString;
+    private String mRestockPriceString;
+    private RelativeLayout mRelativeLayoutPictureContainer;
 
+    // Constants
     // Loader ID for loader to use when loading an existing item from InventoryItems db
     private static final int EXISTING_ITEM_LOADER = 0;
     // Request code for passing into startActivityResult when launching Camera
@@ -178,7 +153,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Uri photoUri = FileProvider.getUriForFile(v.getContext(), v.getContext().getString(R.string.file_provider_path), photoFile);
                 Log.v(LOG_TAG, "photoUri : " + photoUri);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(photoUri, "image/*");
+                intent.setDataAndType(photoUri, getString(R.string.open_full_size_photo_intent_data_type));
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 if (intent.resolveActivity(v.getContext().getPackageManager()) != null) {
                     v.getContext().startActivity(intent);
@@ -248,7 +223,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         }
                     }
                 });
-
                 // Create and show the AlertDialog
                 AlertDialog deletePhotoAlertDialog = deletePhotoBuilder.create();
                 deletePhotoAlertDialog.show();
@@ -272,15 +246,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             setTheme(R.style.AppThemeLight);
         }
         setContentView(R.layout.activity_editor);
-
         // Use getIntent and getData to get the associated Uri that opened this activity
         Intent intent = getIntent();
         mCurrentItemUri = intent.getData();
-
         // Get preferences from settings
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mWarningThreshold = Integer.valueOf(sharedPrefs.getString(this.getString(R.string.settings_warning_threshold_key), this.getString(R.string.settings_warning_threshold_default)));
-
         // Find views and layouts that we will need to work with
         mNameEditText = (EditText) findViewById(R.id.edit_item_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_item_quantity);
@@ -308,24 +279,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mTextViewCollapseDetails = (TextView) findViewById(R.id.text_view_collapse_details);
         mTextViewCollapseNotes = (TextView) findViewById(R.id.text_view_collapse_notes);
         mRelativeLayoutBarChartAreaContainer = (RelativeLayout) findViewById(R.id.relative_layout_bar_chart_area_container);
-        // Find the "add a photo" container layout so we can set a click listener on it
-        RelativeLayout pictureContainerRelativeLayout = (RelativeLayout) findViewById(R.id.picture_container_relative_layout);
-        // Find the Picture image view and set it to a global variable so we can change
-        // the image it contains from other methods
+        mRelativeLayoutPictureContainer = (RelativeLayout) findViewById(R.id.picture_container_relative_layout);
         mPictureImageView = (ImageView) findViewById(R.id.picture_image_view);
-        // Find the "add a photo icon and text" linear layout so we can show and hide it
         mAddAPhotoLinearLayout = (LinearLayout) findViewById(R.id.add_a_photo_linear_layout);
-        // Find the view full size and delete photo container layout so we can show/hide it
         mViewPhotoFullSizeAndDeletePhotoRelativeLayout = (RelativeLayout) findViewById(R.id.view_and_delete_photo_container_relative_layout);
-        // Find the individual image views inside the view full size and delete photo container
         mViewPhotoFullSizeImageView = (ImageView) findViewById(R.id.view_full_size_photo_image_view);
         mDeletePhotoImageView = (ImageView) findViewById(R.id.delete_photo_image_view);
-        // Find bar chart area inventory percentage and restock cost text views
         mTextViewInventoryPercentage = (TextView) findViewById(R.id.text_view_bar_chart_inventory_percentage);
         mTextViewRestockCost = (TextView) findViewById(R.id.text_view_bar_chart_restock_cost);
-        // Find dynamic inventory "in stock" level bar
         mViewDynamicInventoryBar = findViewById(R.id.view_bar_chart_dynamic_in_stock_bar);
-
+        // Determine whether opening an existing item or creating a new one
         if (mCurrentItemUri == null) {
             // If opened using FAB, uri will be null, change title to "Add an item"
             // No need to create a loader, nothing to load
@@ -344,7 +307,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Show bar chart and order more button area container
             mRelativeLayoutBarChartAreaContainer.setVisibility(View.VISIBLE);
         }
-
         // Set touch listener on all fields to know whether or not to show "discard changes?" dialog
         mNameEditText.setOnTouchListener(mOnTouchListener);
         mQuantityEditText.setOnTouchListener(mOnTouchListener);
@@ -361,19 +323,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mLinearLayoutEditorUpArrowContainer.setOnTouchListener(mOnTouchListener);
         mNotesEditText.setOnTouchListener(mOnTouchListener);
         mTargetQuantityEditText.setOnTouchListener(mOnTouchListener);
-
         // Call helper method to set up our spinners
         setupSpinners();
-
         // Create new click listener and set it on the "Add a photo" container layout
-        pictureContainerRelativeLayout.setOnClickListener(new View.OnClickListener() {
+        mRelativeLayoutPictureContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Do this when "Add a Photo" is clicked
                 launchCameraIntentForResult();
             }
         });
-
         // If current picture is null, hide the view full size and delete photo layout
         if (mCurrentPhotoPath == null) {
             mViewPhotoFullSizeAndDeletePhotoRelativeLayout.setVisibility(View.GONE);
@@ -383,7 +342,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mViewPhotoFullSizeImageView.setOnClickListener(mOpenFullSizePhotoClickListener);
             mDeletePhotoImageView.setOnClickListener(mDeletePhotoClickListener);
         }
-
         // Set click listener on down arrow
         mLinearLayoutEditorDownArrowContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -393,16 +351,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
                     // If quantity is at least 1 we can reduce it by 1
                     if (currentQuantity >= 1) {
-                        int newQuantity = currentQuantity - 1;
-                        mQuantityEditText.setText(String.valueOf(newQuantity));
-                        mInventoryPercentage = ((double) newQuantity / mTargetQuantity) * 100;
-                        // Update bar chart using new inventory percentage values
+                        mQuantity = currentQuantity - 1;
+                        mQuantityEditText.setText(String.valueOf(mQuantity));
+                        // Update bar chart using new values
                         updateDynamicBarChart();
                     }
                 }
             }
         });
-
         // Set click listener on up arrow
         mLinearLayoutEditorUpArrowContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -412,16 +368,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     int currentQuantity = Integer.valueOf(mQuantityEditText.getText().toString().trim());
                     // If current quantity is at least 1 below max value, increase it by 1
                     if (currentQuantity <= (Integer.MAX_VALUE - 1)) {
-                        int newQuantity = currentQuantity + 1;
-                        mQuantityEditText.setText(String.valueOf(newQuantity));
-                        mInventoryPercentage = ((double) newQuantity / mTargetQuantity) * 100;
-                        // Update bar chart using new inventory percentage values
+                        mQuantity = currentQuantity + 1;
+                        mQuantityEditText.setText(String.valueOf(mQuantity));
+                        // Update bar chart using new values
                         updateDynamicBarChart();
                     }
                 }
             }
         });
-
         // Set click listener on collapse details container
         mLinearLayoutCollapseDetailsContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -447,7 +401,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
-
         // Set click listener on collapse notes container
         mLinearLayoutCollapseNotesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -473,7 +426,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
-
         // Set click listener on order more button in bar chart area
         mRelativeLayoutBarChartAreaContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -488,7 +440,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     public void onClick(DialogInterface dialog, int id) {
                         // User clicked "Yes, dial" button, dial supplier phone number
                         // Create intent to open phone app using supplier phone number
-                        Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mSupplierPhoneNumberEditText.getText().toString()));
+                        Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(getString(R.string.intent_dial_uri_prefix) + mSupplierPhoneNumberEditText.getText().toString()));
                         v.getContext().startActivity(dialIntent);
                     }
                 });
@@ -500,7 +452,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         }
                     }
                 });
-
                 // Create and show the AlertDialog
                 AlertDialog dialConfirmationDialog = dialConfirmationBuilder.create();
                 dialConfirmationDialog.show();
@@ -520,7 +471,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
-    // Helper method to update dynamic bar chart
+    // Helper method to update dynamic bar chart with new values
     public void updateDynamicBarChart() {
         mRelativeLayoutBarChartAreaContainer = (RelativeLayout) findViewById(R.id.relative_layout_bar_chart_area_container);
         mViewDynamicInventoryBar = findViewById(R.id.view_bar_chart_dynamic_in_stock_bar);
@@ -530,6 +481,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         double screenDensity = getResources().getDisplayMetrics().density;
         Log.e(LOG_TAG, "screenDensity in update method: " + screenDensity);
         mBarChartTotalWidthInDp = mBarChartTotalWidthInPx / screenDensity;
+        mInventoryPercentage = ((double) mQuantity / mTargetQuantity) * 100;
         Log.e(LOG_TAG, "barChartTotalWidthInDp in update method: " + mBarChartTotalWidthInDp);
         mBarChartWidthToSetDynamicBar = (int) ((mInventoryPercentage / 100) * mBarChartTotalWidthInDp);
         Log.e(LOG_TAG, "mInventoryPercentage in update method: " + mInventoryPercentage);
@@ -552,6 +504,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         mViewDynamicInventoryBar.setLayoutParams(layoutParams);
         Log.e(LOG_TAG, "mViewDynamicInventoryBar width after: " + mViewDynamicInventoryBar.getLayoutParams().width);
+        // Update data area underneath bar chart
+        mTextViewInventoryPercentage = (TextView) findViewById(R.id.text_view_bar_chart_inventory_percentage);
+        mTextViewRestockCost = (TextView) findViewById(R.id.text_view_bar_chart_restock_cost);
+        mInventoryPercentageString = String.format(Locale.US, "%.1f", mInventoryPercentage) + "%";
+        mQuantityToReachTarget = mTargetQuantity - mQuantity;
+        mRestockPrice = mQuantityToReachTarget * mPurchasePriceAsDouble;
+        mRestockPriceString = "$" + String.format(Locale.US, "%.2f", mRestockPrice)
+                + " (" + mQuantityToReachTarget + " @ $" + String.format(Locale.US, "%.2f", mPurchasePriceAsDouble) + ")";
+        mTextViewInventoryPercentage.setText(mInventoryPercentageString);
+        mTextViewRestockCost.setText(mRestockPriceString);
     }
 
     // Override back button press to show dialog if pressed after item has been touched
@@ -597,7 +559,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ItemEntry.COLUMN_ITEM_NOTES,
                 ItemEntry.COLUMN_ITEM_TARGET_QUANTITY,
                 ItemEntry.COLUMN_ITEM_PHOTO_PATH};
-
         // Return new loader with Uri of single item clicked on to open EditorActivity
         return new CursorLoader(this, mCurrentItemUri, projection, null, null, null);
     }
@@ -610,7 +571,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (data == null || data.getCount() < 1) {
             return;
         }
-
         // Update editor fields with data for current item
         // Move cursor to 0 before reading from it
         if (data.moveToFirst()) {
@@ -629,17 +589,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int notesColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_NOTES);
             int targetQuantityColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY);
             int photoPathColumnIndex = data.getColumnIndex(ItemEntry.COLUMN_ITEM_PHOTO_PATH);
-
             // Extract values from cursor using column index, convert where necessary
             String name = data.getString(nameColumnIndex);
-            int quantity = data.getInt(quantityColumnIndex);
+            mQuantity = data.getInt(quantityColumnIndex);
             int size = data.getInt(sizeColumnIndex);
             int sizeType = data.getInt(sizeTypeColumnIndex);
             String origin = data.getString(originColumnIndex);
             int abv = data.getInt(abvColumnIndex);
             long purchasePriceAsCents = data.getLong(purchasePriceColumnIndex);
-            double purchasePriceAsDouble = purchasePriceAsCents / 100.0;
-            String purchasePriceString = String.format(Locale.US, "%.2f", purchasePriceAsDouble);
+            mPurchasePriceAsDouble = purchasePriceAsCents / 100.0;
+            String purchasePriceString = String.format(Locale.US, "%.2f", mPurchasePriceAsDouble);
             long salePriceAsCents = data.getLong(salePriceColumnIndex);
             // ^should be 1299
             double salePriceAsDouble = salePriceAsCents / 100.0;
@@ -653,19 +612,17 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String notes = data.getString(notesColumnIndex);
             mTargetQuantity = data.getInt(targetQuantityColumnIndex);
             String photoPath = data.getString(photoPathColumnIndex);
-
             // Calculate values for bar chart area
-            mInventoryPercentage = ((double) quantity / mTargetQuantity) * 100;
-            String inventoryPercentageString = String.format(Locale.US, "%.1f", mInventoryPercentage) + "%";
-            int quantityToReachTarget = mTargetQuantity - quantity;
-            double restockPrice = quantityToReachTarget * purchasePriceAsDouble;
-            String restockPriceString = "$" + String.format(Locale.US, "%.2f", restockPrice)
-                    + " (" + quantityToReachTarget + " @ $" + String.format(Locale.US, "%.2f", purchasePriceAsDouble) + ")";
+            mInventoryPercentage = ((double) mQuantity / mTargetQuantity) * 100;
+            mInventoryPercentageString = String.format(Locale.US, "%.1f", mInventoryPercentage) + "%";
+            mQuantityToReachTarget = mTargetQuantity - mQuantity;
+            mRestockPrice = mQuantityToReachTarget * mPurchasePriceAsDouble;
+            mRestockPriceString = "$" + String.format(Locale.US, "%.2f", mRestockPrice)
+                    + " (" + mQuantityToReachTarget + " @ $" + String.format(Locale.US, "%.2f", mPurchasePriceAsDouble) + ")";
             mRelativeLayoutBarChartAreaContainer = (RelativeLayout) findViewById(R.id.relative_layout_bar_chart_area_container);
-
             // Update EditText fields and bar chart area views
             mNameEditText.setText(name);
-            mQuantityEditText.setText(String.valueOf(quantity));
+            mQuantityEditText.setText(String.valueOf(mQuantity));
             mSizeEditText.setText(String.valueOf(size));
             mOriginEditText.setText(origin);
             mAbvEditText.setText(String.valueOf(abv));
@@ -675,17 +632,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mSupplierPhoneNumberEditText.setText(String.valueOf(supplierPhoneNumber));
             mNotesEditText.setText(notes);
             mTargetQuantityEditText.setText(String.valueOf(mTargetQuantity));
-            mTextViewInventoryPercentage.setText(inventoryPercentageString);
-            mTextViewRestockCost.setText(restockPriceString);
-
+            mTextViewInventoryPercentage.setText(mInventoryPercentageString);
+            mTextViewRestockCost.setText(mRestockPriceString);
             // If photo path is not null, create scaled bitmap from it
             if (photoPath != null) {
                 mCurrentPhotoPath = photoPath;
-                Bitmap testBm = EditorActivity.createCustomScaledBitmap(getApplicationContext(), 100, photoPath);
+                Bitmap scaledBitmap = EditorActivity.createCustomScaledBitmap(getApplicationContext(), 100, photoPath);
                 // Hide the "add a photo" text
                 mAddAPhotoLinearLayout.setVisibility(View.GONE);
                 // Populate image field with new bitmap
-                mPictureImageView.setImageBitmap(testBm);
+                mPictureImageView.setImageBitmap(scaledBitmap);
                 // Show view full size and delete photo layout
                 mViewPhotoFullSizeAndDeletePhotoRelativeLayout.setVisibility(View.VISIBLE);
                 // Set click listener on view full size image view
@@ -693,7 +649,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Set click listener on delete photo image view
                 mDeletePhotoImageView.setOnClickListener(mDeletePhotoClickListener);
             }
-
             // Update spirit type dropdown spinner
             // SetSelection passes in value corresponding to the position in the array
             // that populates the spinner, R.array.array_spirit_type_options in this case
@@ -802,16 +757,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             Log.v(LOG_TAG, "Current photo path: " + mCurrentPhotoPath);
             // Show a toast that photo was saved
             Toast.makeText(EditorActivity.this, R.string.photo_saved, Toast.LENGTH_SHORT).show();
-
             // Get Uri from current photo path and store in global variable so we can pass it
             // to the saveItem() method and store it in the database
             mCurrentPhotoUri = Uri.fromFile(mCurrentPhotoFile);
             mCurrentPhotoPath = mCurrentPhotoUri.getPath();
             Log.v(LOG_TAG, "Current photo Uri: " + mCurrentPhotoUri);
-
             // Display scaled down bitmap in 100dp square in ui
             mPictureImageView.setImageBitmap(createCustomScaledBitmap(getApplicationContext(), 100, mCurrentPhotoPath));
-
             // We got a picture back, show View full size and delete photo layout
             mViewPhotoFullSizeAndDeletePhotoRelativeLayout.setVisibility(View.VISIBLE);
             mViewPhotoFullSizeImageView.setOnClickListener(mOpenFullSizePhotoClickListener);
@@ -842,7 +794,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Log new width and height
         Log.e(LOG_TAG, "newWidth: " + newWidth);
         Log.e(LOG_TAG, "newHeight: " + newHeight);
-
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
     }
 
@@ -857,7 +808,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CAMERA_AND_EXTERNAL_STORAGE);
             return;
         }
-
         // Create new intent to open an app that can handle image capture
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // If there is an app that can handle it, start activity for result, passing
@@ -886,15 +836,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     // Saves in /Android/data/com.bskup.ginventory/files/Pictures
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String timeStamp = new SimpleDateFormat(getString(R.string.create_file_date_time_format), Locale.US).format(new Date());
+        String imageFileName = getString(R.string.create_file_name_prefix) + timeStamp + getString(R.string.create_file_name_divider);
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                getString(R.string.create_file_name_extension),         /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
@@ -907,15 +856,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 R.array.array_spirit_type_options, R.layout.spinner_item);
         ArrayAdapter sizeTypeSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.array_size_type_options, R.layout.spinner_item);
-
         // Specify spinner dropdown layout style shown on click
         spiritTypeSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         sizeTypeSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-
         // Apply the adapters to the spinners
         mSpiritTypeSpinner.setAdapter(spiritTypeSpinnerAdapter);
         mSizeTypeSpinner.setAdapter(sizeTypeSpinnerAdapter);
-
         // Read value user selects from Spirit Type spinner and change global variable mSpiritType
         // to corresponding integer defined in ItemContract (used when saving an item)
         mSpiritTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -950,7 +896,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     }
                 }
             }
-
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -973,7 +918,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     }
                 }
             }
-
             // Because AdapterView is an abstract class, onNothingSelected must be defined
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -998,7 +942,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -1026,7 +969,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -1048,7 +990,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String supplierPhoneNumberString = mSupplierPhoneNumberEditText.getText().toString().trim();
         String notesString = mNotesEditText.getText().toString().trim();
         String targetQuantityString = mTargetQuantityEditText.getText().toString().trim();
-
         // Before creating ContentValues, check if all fields are empty and spirit type unknown
         if (TextUtils.isEmpty(nameString) && TextUtils.isEmpty(quantityString) && TextUtils.isEmpty(sizeString)
                 && TextUtils.isEmpty(originString) && TextUtils.isEmpty(abvString)
@@ -1060,11 +1001,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // triggers finish() from onOptionsItemSelected and closes activity
             return true;
         }
-
         // Create a ContentValues object where column names are the keys,
         // and item attributes from the editor are the values.
         ContentValues values = new ContentValues();
-
         // Set error msg if name left blank by user, otherwise parse it from
         // the String we pull from the EditText field
         String name;
@@ -1213,7 +1152,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             targetQuantity = Integer.parseInt(targetQuantityString);
         }
-
         // Add values to contentValues object
         values.put(ItemEntry.COLUMN_ITEM_NAME, name);
         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity);
@@ -1229,7 +1167,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ItemEntry.COLUMN_ITEM_NOTES, notesString);
         values.put(ItemEntry.COLUMN_ITEM_TARGET_QUANTITY, targetQuantity);
         values.put(ItemEntry.COLUMN_ITEM_PHOTO_PATH, mCurrentPhotoPath);
-
         // If opened using ListView item, uri will be present, proceed to "Edit Item" (update mode)
         if (mCurrentItemUri != null) {
             // Define selection criteria for rows to update
@@ -1237,7 +1174,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String[] selectionArgs = new String[]{String.valueOf(ContentUris.parseId(mCurrentItemUri))};
             // Update row from editor fields data using ContentResolver, returns # of rows updated
             long rowsUpdated = getContentResolver().update(ItemEntry.CONTENT_URI, values, selection, selectionArgs);
-
             // Show a toast message depending on whether or not the update was successful
             if (rowsUpdated == 0) {
                 // If no rows updated, there was an error with update
@@ -1251,7 +1187,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // If opened using FAB, uri will be null, proceed to "Add an item" (insert mode)
             // Insert a new row from editor fields data using ContentResolver, returns uri of new row
             Uri newUri = getContentResolver().insert(ItemEntry.CONTENT_URI, values);
-
             // Show a toast message depending on whether or not the insertion was successful
             if (newUri == null) {
                 // If the uri is null, there was an error with insertion
@@ -1262,12 +1197,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, R.string.editor_insert_item_success, Toast.LENGTH_SHORT).show();
             }
         }
-
         // Reset photo member variables after saving
         mCurrentPhotoPath = null;
         mCurrentPhotoFile = null;
         mCurrentPhotoUri = null;
-
         // If we made it this far without returning false, must have saved successfully
         return true;
     }
@@ -1281,7 +1214,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String[] selectionArgs = new String[]{String.valueOf(ContentUris.parseId(mCurrentItemUri))};
             // Delete row based on uri using ContentResolver, returns # of rows deleted
             int rowsDeleted = getContentResolver().delete(ItemEntry.CONTENT_URI, selection, selectionArgs);
-
             // Show a toast message depending on whether or not the delete was successful
             if (rowsDeleted == 0) {
                 // If no rows deleted, there was an error with delete
