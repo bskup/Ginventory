@@ -50,7 +50,7 @@ public class ItemContract extends AppCompatActivity {
         public final static String COLUMN_ITEM_SIZE_TYPE = "sizetype";
         // Origin country of the inventory item, SQL data type: TEXT
         public final static String COLUMN_ITEM_ORIGIN ="origin";
-        // Alcohol by volume, SQL data type: INTEGER
+        // Alcohol by volume, SQL data type: REAL
         public final static String COLUMN_ITEM_ABV = "abv";
         // Purchase price we paid, SQL data type: INTEGER
         public final static String COLUMN_ITEM_PURCHASE_PRICE = "purchaseprice";

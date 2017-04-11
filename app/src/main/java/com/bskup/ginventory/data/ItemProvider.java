@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.bskup.ginventory.data.ItemContract.ItemEntry;
 
 import static android.R.attr.id;
+import static android.R.attr.value;
 
 public class ItemProvider extends ContentProvider {
     // Tag for log messages
@@ -133,7 +134,7 @@ public class ItemProvider extends ContentProvider {
             throw new IllegalArgumentException("Item requires an origin");
         }
         // Check that the abv is not null
-        Integer abv = values.getAsInteger(ItemEntry.COLUMN_ITEM_ABV);
+        Double abv = values.getAsDouble(ItemEntry.COLUMN_ITEM_ABV);
         if (abv == null) {
             throw new IllegalArgumentException("Item requires an ABV");
         }
@@ -290,7 +291,7 @@ public class ItemProvider extends ContentProvider {
         // If it does, check it for validity
         if (values.containsKey(ItemEntry.COLUMN_ITEM_ABV)) {
             // Check that abv is valid
-            Integer abv = values.getAsInteger(ItemEntry.COLUMN_ITEM_ABV);
+            Double abv = values.getAsDouble(ItemEntry.COLUMN_ITEM_ABV);
             if (abv != null && abv < 0) {
                 throw new IllegalArgumentException("Item requires a valid ABV");
             }

@@ -55,10 +55,8 @@ import java.util.Locale;
 import static android.R.attr.name;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
     // Tag for log messages
     private static String LOG_TAG = EditorActivity.class.getSimpleName();
-
     // EditText fields for inventory item attributes
     private EditText mNameEditText;
     private EditText mQuantityEditText;
@@ -71,7 +69,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mSupplierPhoneNumberEditText;
     private EditText mNotesEditText;
     private EditText mTargetQuantityEditText;
-
     // Member variables to pass around
     private Spinner mSpiritTypeSpinner;
     private Spinner mSizeTypeSpinner;
@@ -116,7 +113,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private String mInventoryPercentageString;
     private String mRestockPriceString;
     private RelativeLayout mRelativeLayoutPictureContainer;
-
     // Constants
     // Loader ID for loader to use when loading an existing item from InventoryItems db
     private static final int EXISTING_ITEM_LOADER = 0;
@@ -124,12 +120,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     static final int REQUEST_IMAGE_CAPTURE = 1;
     // Permission request response constant
     public static final int PERMISSION_REQUEST_CAMERA_AND_EXTERNAL_STORAGE = 100;
-
     // Boolean for tracking whether any fields have been touched, so we can know whether
     // or not to show "Discard changes?" dialog before closing out of the editor activity
     // Initially false until something is touched
     private boolean mItemHasChanged = false;
-
     // OnTouchListener that will detect fields being touched so we know whether or not
     // to display "Discard changes?" dialog when closing out of the activity
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
@@ -140,7 +134,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return false;
         }
     };
-
     // OnClickListener that will open intent with current image uri
     private View.OnClickListener mOpenFullSizePhotoClickListener = new View.OnClickListener() {
         @Override
@@ -164,7 +157,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
     };
-
     // OnClickListener that will delete current image
     private View.OnClickListener mDeletePhotoClickListener = new View.OnClickListener() {
         @Override
@@ -595,7 +587,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             int size = data.getInt(sizeColumnIndex);
             int sizeType = data.getInt(sizeTypeColumnIndex);
             String origin = data.getString(originColumnIndex);
-            int abv = data.getInt(abvColumnIndex);
+            double abv = data.getDouble(abvColumnIndex);
             long purchasePriceAsCents = data.getLong(purchasePriceColumnIndex);
             mPurchasePriceAsDouble = purchasePriceAsCents / 100.0;
             String purchasePriceString = String.format(Locale.US, "%.2f", mPurchasePriceAsDouble);
@@ -1061,7 +1053,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         // Set error msg if abv left blank by user, otherwise parse it from
         // the String we pull from the EditText field
-        int abv;
+        double abv;
         if (TextUtils.isEmpty(abvString)) {
             mAbvEditText.setError(getString(R.string.error_required_abv));
             // Request focus so error message is automatically displayed
@@ -1069,7 +1061,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Return without saving
             return false;
         } else {
-            abv = Integer.parseInt(abvString);
+            abv = Double.parseDouble(abvString);
         }
         // Set error msg if purchase price left blank by user, otherwise parse it from
         // the String we pull from the EditText field

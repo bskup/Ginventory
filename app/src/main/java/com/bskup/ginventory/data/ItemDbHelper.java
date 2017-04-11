@@ -29,7 +29,7 @@ public class ItemDbHelper extends SQLiteOpenHelper {
                 + ItemEntry.COLUMN_ITEM_SIZE + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_SIZE_TYPE + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_ORIGIN + " TEXT NOT NULL, "
-                + ItemEntry.COLUMN_ITEM_ABV + " INTEGER NOT NULL, "
+                + ItemEntry.COLUMN_ITEM_ABV + " REAL NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_PURCHASE_PRICE + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_SALE_PRICE + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_SPIRIT_TYPE + " INTEGER NOT NULL, "
