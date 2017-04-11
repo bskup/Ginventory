@@ -15,23 +15,19 @@ import com.bskup.ginventory.data.ItemContract.ItemEntry;
 import static android.R.attr.id;
 
 public class ItemProvider extends ContentProvider {
-
     // Tag for log messages
     public static final String LOG_TAG = ItemProvider.class.getSimpleName();
-
     // Constants for use with UriMatcher
     // Whole inventory table
     private static final int INVENTORY = 100;
     // Singe inventory item from inventory table
     private static final int INVENTORY_ID = 101;
-
     // UriMatcher object to match a content URI to a corresponding code constant
     // The input passed into the constructor is the code to return for the root URI
     // (NO_MATCH is commonly used here)
     // sVariable for "static"
     // (initialized when class is loaded, belongs to class not instance of class)
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
     // Static initializer. Runs first time anything is called from this class
     // Adds patterns this provider should recognize
     static {
@@ -40,7 +36,6 @@ public class ItemProvider extends ContentProvider {
         sUriMatcher.addURI(ItemContract.CONTENT_AUTHORITY, ItemContract.PATH_INVENTORY, INVENTORY);
         sUriMatcher.addURI(ItemContract.CONTENT_AUTHORITY, ItemContract.PATH_INVENTORY + "/#", INVENTORY_ID);
     }
-
     // Create ItemDbHelper global variable, so it can be referenced from other
     // ContentProvider methods
     private ItemDbHelper mDbHelper;
@@ -59,10 +54,8 @@ public class ItemProvider extends ContentProvider {
                         String sortOrder) {
         // Get readable database
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
-
         // Cursor to hold result of query
         Cursor cursor;
-
         // int variable for code UriMatcher will return from .match
         int match = sUriMatcher.match(uri);
         // Switch statement based on result of .match
@@ -89,7 +82,6 @@ public class ItemProvider extends ContentProvider {
         // This sets a listener on the Uri passed into this query method that detects whenever the
         // data at that Uri changes, and tells the loader to reload the data in the background
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
-
         return cursor;
     }
 
@@ -205,13 +197,11 @@ public class ItemProvider extends ContentProvider {
         if (sizeTypeToCheck == null || !ItemEntry.isValidSizeType(sizeTypeToCheck)) {
             throw new IllegalArgumentException("Item requires a valid size type");
         }
-
         // Insert a new item into the inventory database table with the given ContentValues
         // Get writable database object
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Insert a new row for item in database, returning the ID of that new row
         long newRowId = db.insert(ItemEntry.TABLE_NAME, null, values);
-
         // Show a toast message depending on whether or not the insertion was successful
         if (newRowId == -1) {
             // If the row ID is -1, then there was an error with insertion
@@ -222,7 +212,6 @@ public class ItemProvider extends ContentProvider {
             // Otherwise, the insertion was successful and we can display a toast with the row ID
             Toast.makeText(getContext(), "Item saved", Toast.LENGTH_SHORT).show();
         }
-
         // Once we know the ID of the new row in the table,
         // return the new URI with the ID appended to the end of it
         return ContentUris.withAppendedId(uri, id);
@@ -324,7 +313,6 @@ public class ItemProvider extends ContentProvider {
                 throw new IllegalArgumentException("Item requires a valid sale price");
             }
         }
-
         // Check if ContentValues object contains supplier name key
         // If it does, check it for validity
         if (values.containsKey(ItemEntry.COLUMN_ITEM_SUPPLIER_NAME)) {
@@ -363,25 +351,21 @@ public class ItemProvider extends ContentProvider {
                 throw new IllegalArgumentException("Item requires a valid target quantity");
             }
         }
-
         // Check if the ContentValues objects size is 0
         // If it is 0, return 0 instead of wasting resources doing database call
         if (values.size() == 0) {
             return 0;
         }
-
         // If we are still going at this point, size is larger than 0
         // So we can get a writable database object and perform the update operation
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Perform update operation, return the number of rows that were affected
         int rowsUpdated = db.update(ItemEntry.TABLE_NAME, values, selection, selectionArgs);
-
         // If 1 or more rows were successfully updated, notify listener that data changed
         if (rowsUpdated != 0) {
             // Notify listener that data has changed
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
         return rowsUpdated;
     }
 
@@ -392,35 +376,29 @@ public class ItemProvider extends ContentProvider {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Number of rows successfully deleted
         int rowsDeleted;
-
         // Use uriMatcher to determine if the uri we pass in refers to a whole table or single row
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case INVENTORY:
                 // Perform delete operation, return the number of rows that were affected
                 rowsDeleted = db.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
-
                 // If 1 or more rows were successfully deleted, notify listener that data changed
                 if (rowsDeleted != 0) {
                     // Notify listener that data has changed
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
-
                 return rowsDeleted;
             case INVENTORY_ID:
                 // Delete a single row given by the ID in the URI
                 selection = ItemEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
-
                 // Perform delete operation, return the number of rows that were affected
                 rowsDeleted = db.delete(ItemEntry.TABLE_NAME, selection, selectionArgs);
-
                 // If 1 or more rows were successfully deleted, notify listener that data changed
                 if (rowsDeleted != 0) {
                     // Notify listener that data has changed
                     getContext().getContentResolver().notifyChange(uri, null);
                 }
-
                 return rowsDeleted;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
@@ -444,5 +422,4 @@ public class ItemProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI " + uri + " with match " + match );
         }
     }
-
 }

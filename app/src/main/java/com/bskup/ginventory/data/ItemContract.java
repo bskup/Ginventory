@@ -25,7 +25,6 @@ public class ItemContract extends AppCompatActivity {
     // Inner class that defines constants for the inventory database table
     // Each entry represents a single item
     public static final class ItemEntry implements BaseColumns {
-
         // Name of database table for inventory items
         public final static String TABLE_NAME = "inventory";
         // Complete content Uri
@@ -38,54 +37,37 @@ public class ItemContract extends AppCompatActivity {
         // Uses a built in constant from contentResolver class
         public static final String CONTENT_TYPE_ITEM = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/"
                 + CONTENT_AUTHORITY + "/" + PATH_INVENTORY;
-
         // Database column name Strings
-        // Unique ID for each inventory item for use in the database table
-        // SQL data type: INTEGER
+        // Unique ID for each inventory item for use in the database table, SQL data type: INTEGER
         public final static String _ID = BaseColumns._ID;
-        // Name of the inventory item
-        // SQL data type: TEXT
+        // Name of the inventory item, SQL data type: TEXT
         public final static String COLUMN_ITEM_NAME ="name";
-        // Quantity of items in stock
-        // SQL data type: INTEGER
+        // Quantity of items in stock, SQL data type: INTEGER
         public final static String COLUMN_ITEM_QUANTITY = "quantity";
-        // Size of item in fl oz or ml
-        // SQL data type: INTEGER
+        // Size of item in fl oz or ml, SQL data type: INTEGER
         public final static String COLUMN_ITEM_SIZE = "size";
-        // Size type of the item
-        // Possible values listed below
+        // Size type of the item, SQL data type: INTEGER
         public final static String COLUMN_ITEM_SIZE_TYPE = "sizetype";
-        // Origin country of the inventory item
-        // SQL data type: TEXT
+        // Origin country of the inventory item, SQL data type: TEXT
         public final static String COLUMN_ITEM_ORIGIN ="origin";
-        // Alcohol by volume
-        // SQL data type: INTEGER
+        // Alcohol by volume, SQL data type: INTEGER
         public final static String COLUMN_ITEM_ABV = "abv";
-        // Purchase price we paid
-        // SQL data type: INTEGER
+        // Purchase price we paid, SQL data type: INTEGER
         public final static String COLUMN_ITEM_PURCHASE_PRICE = "purchaseprice";
-        // Sale price item is being sold for
-        // SQL data type: INTEGER
+        // Sale price item is being sold for, SQL data type: INTEGER
         public final static String COLUMN_ITEM_SALE_PRICE = "saleprice";
-        // Spirit type of the item
-        // Possible values listed below
+        // Spirit type of the item, SQL data type: INTEGER
         public final static String COLUMN_ITEM_SPIRIT_TYPE = "spirittype";
-        // Supplier name saved as String
-        // SQL data type: TEXT
+        // Supplier name saved as String, SQL data type: TEXT
         public final static String COLUMN_ITEM_SUPPLIER_NAME = "suppliername";
-        // Supplier phone number saved as long
-        // SQL data type: INTEGER
+        // Supplier phone number saved as long, SQL data type: INTEGER
         public final static String COLUMN_ITEM_SUPPLIER_PHONE_NUMBER = "supplierphonenumber";
-        // Uri of item photo saved as String
-        // SQL data type: TEXT
+        // Uri of item photo saved as String, SQL data type: TEXT
         public final static String COLUMN_ITEM_PHOTO_PATH = "photopath";
-        // Notes saved as String
-        // SQL data type: TEXT
+        // Notes saved as String, SQL data type: TEXT
         public final static String COLUMN_ITEM_NOTES = "notes";
-        // Target quantity of items to achieve full stock level
-        // SQL data type: INTEGER
+        // Target quantity of items to achieve full stock level, SQL data type: INTEGER
         public final static String COLUMN_ITEM_TARGET_QUANTITY = "targetquantity";
-
         // Possible values for spirit type
         public static final int SPIRIT_TYPE_UNKNOWN = 0;
         public static final int SPIRIT_TYPE_BEER = 1;
@@ -99,7 +81,6 @@ public class ItemContract extends AppCompatActivity {
         public static final int SPIRIT_TYPE_BRANDY = 9;
         public static final int SPIRIT_TYPE_COGNAC = 10;
         public static final int SPIRIT_TYPE_LIQEUR = 11;
-
         // Possible values for size type
         public static final int SIZE_TYPE_ML = 0;
         public static final int SIZE_TYPE_OZ = 1;
@@ -129,5 +110,4 @@ public class ItemContract extends AppCompatActivity {
             }
         }
     }
-
 }

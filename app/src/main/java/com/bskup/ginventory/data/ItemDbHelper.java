@@ -8,12 +8,8 @@ import com.bskup.ginventory.data.ItemContract.ItemEntry;
 
 // Manages database creation and version management for ginventory app
 public class ItemDbHelper extends SQLiteOpenHelper {
-
-    public static final String LOG_TAG = ItemDbHelper.class.getSimpleName();
-
     // Name of inventory items database file
     private static final String INVENTORY_ITEMS_DATABASE_FILE_NAME = "inventory.db";
-
     // Database version, if schema changes this must be incremented
     private static final int INVENTORY_ITEMS_DATABASE_VERSION = 1;
 
@@ -42,7 +38,6 @@ public class ItemDbHelper extends SQLiteOpenHelper {
                 + ItemEntry.COLUMN_ITEM_NOTES + " TEXT, "
                 + ItemEntry.COLUMN_ITEM_TARGET_QUANTITY + " INTEGER NOT NULL, "
                 + ItemEntry.COLUMN_ITEM_PHOTO_PATH + " TEXT);";
-
         // Execute the SQL statement that creates the inventory items table
         db.execSQL(SQL_CREATE_INVENTORY_TABLE);
     }

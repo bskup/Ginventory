@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class SettingsActivity extends AppCompatActivity {
-
     // Tag for log messages
     public static String LOG_TAG = SettingsActivity.class.getName();
 
@@ -31,25 +30,20 @@ public class SettingsActivity extends AppCompatActivity {
 
     // Preference fragment
     public static class GinventoryPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
-
         // Boolean whether preferences have changed or not
         public static Boolean mPreferencesChanged = false;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
             Log.v(LOG_TAG, "mPreferencesChanged in oncreate: " + mPreferencesChanged);
-
             addPreferencesFromResource(R.xml.settings_main);
             // Find the shared preferences and set listener on them
             // Listen for change of the theme preference
             SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
             Preference warningThreshold = findPreference(getString(R.string.settings_warning_threshold_key));
             bindPreferenceSummaryToValue(warningThreshold);
-
             Preference theme = findPreference(getString(R.string.settings_theme_key));
             bindPreferenceSummaryToValue(theme);
         }
