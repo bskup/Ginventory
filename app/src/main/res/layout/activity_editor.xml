@@ -113,7 +113,7 @@
                             android:background="?attr/theme_dependent_contrast_bg"/>
 
                         <View
-                            android:id="@+id/view_bar_chart_in_stock"
+                            android:id="@+id/view_bar_chart_dynamic_in_stock_bar"
                             android:layout_width="80dp"
                             android:layout_height="22dp"
                             android:background="@color/colorPrimary"/>
@@ -131,7 +131,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:alpha="0.5"
-                                android:text="Inventory Level: "
+                                android:text="@string/editor_inventory_level_label"
                                 android:textSize="12sp"/>
 
                             <TextView
@@ -140,7 +140,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:alpha="0.5"
-                                android:text="40%"
+                                android:text="@string/editor_inventory_percentage"
                                 android:textSize="12sp"/>
                         </LinearLayout>
 
@@ -159,8 +159,9 @@
                                 android:alpha="0.5"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Restock: "
+                                android:text="@string/editor_restock_label"
                                 android:textSize="12sp"/>
+
                             <TextView
                                 android:id="@+id/text_view_bar_chart_restock_cost"
                                 android:layout_width="wrap_content"
@@ -169,7 +170,7 @@
                                 android:alpha="0.5"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="$1234.00 (100 @ $12.34)"
+                                android:text="@string/editor_restock_cost"
                                 android:textSize="12sp"/>
                         </LinearLayout>
 
@@ -221,14 +222,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
-                        <!-- Name Label
-                        <TextView
-                            style="@style/CategoryStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0"
-                            android:text="Name"/> -->
 
                         <!-- Name field -->
                         <EditText
@@ -318,6 +311,7 @@
                             android:layout_weight="1"
                             android:hint="@string/hint_item_size"
                             android:inputType="number"/>
+
                         <!-- Size type drop-down spinner -->
                         <Spinner
                             android:id="@+id/spinner_size_type"
@@ -345,6 +339,7 @@
                             android:alpha="0.87"
                             android:paddingLeft="8dp"
                             android:spinnerMode="dropdown"/>
+
                     </LinearLayout>
 
                 </LinearLayout>

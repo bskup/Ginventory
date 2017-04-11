@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -128,6 +130,18 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private TextView mTextViewInventoryPercentage;
     // TextView with editor bar chart area restock cost data
     private TextView mTextViewRestockCost;
+    // Dynamic bar chart "in stock" level view
+    private View mViewDynamicInventoryBar;
+    // Bar chart total width in px
+    private int mBarChartTotalWidthInPx;
+    // Bar chart total width in dp
+    private double mBarChartTotalWidthInDp;
+    // Width in dp to set dynamic bar after calculations done in onWindowFocusChanged
+    private int mBarChartWidthToSetDynamicBar;
+    private double mInventoryPercentage;
+    private int mBarChartWidthToSetDynamicBarInPx;
+    private int mWarningThreshold;
+    private int mTargetQuantity;
 
     // Loader ID for loader to use when loading an existing item from InventoryItems db
     private static final int EXISTING_ITEM_LOADER = 0;
@@ -263,6 +277,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         mCurrentItemUri = intent.getData();
 
+        // Get preferences from settings
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mWarningThreshold = Integer.valueOf(sharedPrefs.getString(this.getString(R.string.settings_warning_threshold_key), this.getString(R.string.settings_warning_threshold_default)));
+
         // Find views and layouts that we will need to work with
         mNameEditText = (EditText) findViewById(R.id.edit_item_name);
         mQuantityEditText = (EditText) findViewById(R.id.edit_item_quantity);
@@ -305,6 +323,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Find bar chart area inventory percentage and restock cost text views
         mTextViewInventoryPercentage = (TextView) findViewById(R.id.text_view_bar_chart_inventory_percentage);
         mTextViewRestockCost = (TextView) findViewById(R.id.text_view_bar_chart_restock_cost);
+        // Find dynamic inventory "in stock" level bar
+        mViewDynamicInventoryBar = findViewById(R.id.view_bar_chart_dynamic_in_stock_bar);
 
         if (mCurrentItemUri == null) {
             // If opened using FAB, uri will be null, change title to "Add an item"
@@ -375,6 +395,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     if (currentQuantity >= 1) {
                         int newQuantity = currentQuantity - 1;
                         mQuantityEditText.setText(String.valueOf(newQuantity));
+                        mInventoryPercentage = ((double) newQuantity / mTargetQuantity) * 100;
+                        // Update bar chart using new inventory percentage values
+                        updateDynamicBarChart();
                     }
                 }
             }
@@ -391,6 +414,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     if (currentQuantity <= (Integer.MAX_VALUE - 1)) {
                         int newQuantity = currentQuantity + 1;
                         mQuantityEditText.setText(String.valueOf(newQuantity));
+                        mInventoryPercentage = ((double) newQuantity / mTargetQuantity) * 100;
+                        // Update bar chart using new inventory percentage values
+                        updateDynamicBarChart();
                     }
                 }
             }
@@ -480,6 +506,52 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 dialConfirmationDialog.show();
             }
         });
+    }
+
+    // Override onWindowFocusChanged to get and change view's width after finished drawing
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.e(LOG_TAG, "onWindowFocusChanged called");
+        if (hasFocus) {
+            // Editor window has focus, views are done loading so we can get their widths
+            // and use them to update the dynamic bar chart
+            updateDynamicBarChart();
+        }
+    }
+
+    // Helper method to update dynamic bar chart
+    public void updateDynamicBarChart() {
+        mRelativeLayoutBarChartAreaContainer = (RelativeLayout) findViewById(R.id.relative_layout_bar_chart_area_container);
+        mViewDynamicInventoryBar = findViewById(R.id.view_bar_chart_dynamic_in_stock_bar);
+        mBarChartTotalWidthInPx = mRelativeLayoutBarChartAreaContainer.getWidth();
+        Log.e(LOG_TAG, "barChartTotalWidthInPx in update method: " + mBarChartTotalWidthInPx);
+        // Get screen density to help scale to a dp value instead of px
+        double screenDensity = getResources().getDisplayMetrics().density;
+        Log.e(LOG_TAG, "screenDensity in update method: " + screenDensity);
+        mBarChartTotalWidthInDp = mBarChartTotalWidthInPx / screenDensity;
+        Log.e(LOG_TAG, "barChartTotalWidthInDp in update method: " + mBarChartTotalWidthInDp);
+        mBarChartWidthToSetDynamicBar = (int) ((mInventoryPercentage / 100) * mBarChartTotalWidthInDp);
+        Log.e(LOG_TAG, "mInventoryPercentage in update method: " + mInventoryPercentage);
+        Log.e(LOG_TAG, "mBarChartWidthToSetDynamicBar in update method: " + mBarChartWidthToSetDynamicBar);
+        Log.e(LOG_TAG, "mViewDynamicInventoryBar width before in update method: " + mViewDynamicInventoryBar.getLayoutParams().width);
+        // Convert dp to px, formula from docs (dpToConvert * screenDensity + 0.5f)
+        mBarChartWidthToSetDynamicBarInPx = (int) (mBarChartWidthToSetDynamicBar * screenDensity + 0.5f);
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mViewDynamicInventoryBar.getLayoutParams();
+        if (mBarChartWidthToSetDynamicBarInPx == 0) {
+            mBarChartWidthToSetDynamicBarInPx++;
+        }
+        layoutParams.width = mBarChartWidthToSetDynamicBarInPx;
+        // Change dynamic bar background color based on inventory percentage and warning threshold
+        if (mInventoryPercentage > 0 && mInventoryPercentage <= mWarningThreshold) {
+            mViewDynamicInventoryBar.setBackgroundResource(R.color.quantityLevelWarning);
+        } else if (mInventoryPercentage == 0) {
+            mViewDynamicInventoryBar.setBackgroundResource(R.color.quantityLevelOutOfStock);
+        } else {
+            mViewDynamicInventoryBar.setBackgroundResource(R.color.quantityLevelGood);
+        }
+        mViewDynamicInventoryBar.setLayoutParams(layoutParams);
+        Log.e(LOG_TAG, "mViewDynamicInventoryBar width after: " + mViewDynamicInventoryBar.getLayoutParams().width);
     }
 
     // Override back button press to show dialog if pressed after item has been touched
@@ -579,18 +651,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String supplierName = data.getString(supplierNameColumnIndex);
             long supplierPhoneNumber = data.getLong(supplierPhoneNumberColumnIndex);
             String notes = data.getString(notesColumnIndex);
-            int targetQuantity = data.getInt(targetQuantityColumnIndex);
+            mTargetQuantity = data.getInt(targetQuantityColumnIndex);
             String photoPath = data.getString(photoPathColumnIndex);
 
             // Calculate values for bar chart area
-            double inventoryPercentage = ((double) quantity / targetQuantity) * 100;
-            String inventoryPercentageString = String.format(Locale.US, "%.1f", inventoryPercentage) + "%";
-            int quantityToReachTarget = targetQuantity - quantity;
+            mInventoryPercentage = ((double) quantity / mTargetQuantity) * 100;
+            String inventoryPercentageString = String.format(Locale.US, "%.1f", mInventoryPercentage) + "%";
+            int quantityToReachTarget = mTargetQuantity - quantity;
             double restockPrice = quantityToReachTarget * purchasePriceAsDouble;
             String restockPriceString = "$" + String.format(Locale.US, "%.2f", restockPrice)
                     + " (" + quantityToReachTarget + " @ $" + String.format(Locale.US, "%.2f", purchasePriceAsDouble) + ")";
+            mRelativeLayoutBarChartAreaContainer = (RelativeLayout) findViewById(R.id.relative_layout_bar_chart_area_container);
 
-            // Update EditText fields and bar chart area views with values extracted from cursor
+            // Update EditText fields and bar chart area views
             mNameEditText.setText(name);
             mQuantityEditText.setText(String.valueOf(quantity));
             mSizeEditText.setText(String.valueOf(size));
@@ -601,7 +674,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mSupplierNameEditText.setText(supplierName);
             mSupplierPhoneNumberEditText.setText(String.valueOf(supplierPhoneNumber));
             mNotesEditText.setText(notes);
-            mTargetQuantityEditText.setText(String.valueOf(targetQuantity));
+            mTargetQuantityEditText.setText(String.valueOf(mTargetQuantity));
             mTextViewInventoryPercentage.setText(inventoryPercentageString);
             mTextViewRestockCost.setText(restockPriceString);
 

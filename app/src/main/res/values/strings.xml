@@ -113,5 +113,9 @@
     <string name="list_item_in_stock_text">In Stock</string>
     <string name="error_required_target_quantity">Target quantity is required</string>
     <string name="error_invalid_target_quantity">Invalid target quantity</string>
+    <string name="editor_inventory_level_label">Inventory Level:</string>
+    <string name="editor_inventory_percentage">40%</string>
+    <string name="editor_restock_label">Restock:</string>
+    <string name="editor_restock_cost">$1234.00 (100 @ $12.34)</string>
 
 </resources>
