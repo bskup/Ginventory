@@ -44,6 +44,7 @@
     <string name="spirit_type_brandy">Brandy</string>
     <string name="spirit_type_cognac">Cognac</string>
     <string name="spirit_type_liqeur">Liqeur</string>
+    <string name="spirit_type_vodka">Vodka</string>
     <string name="size_type_pack">pack</string>
     <string name="size_type_ml">mL</string>
     <string name="size_type_oz">oz</string>

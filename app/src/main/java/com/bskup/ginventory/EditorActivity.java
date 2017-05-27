@@ -672,11 +672,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 case ItemEntry.SPIRIT_TYPE_VERMOUTH:
                     mSpiritTypeSpinner.setSelection(9);
                     break;
-                case ItemEntry.SPIRIT_TYPE_WHISKEY:
+                case ItemEntry.SPIRIT_TYPE_VODKA:
                     mSpiritTypeSpinner.setSelection(10);
                     break;
-                case ItemEntry.SPIRIT_TYPE_WINE:
+                case ItemEntry.SPIRIT_TYPE_WHISKEY:
                     mSpiritTypeSpinner.setSelection(11);
+                    break;
+                case ItemEntry.SPIRIT_TYPE_WINE:
+                    mSpiritTypeSpinner.setSelection(12);
                     break;
                 default:
                     mSpiritTypeSpinner.setSelection(0);
@@ -883,6 +886,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         mSpiritType = ItemEntry.SPIRIT_TYPE_COGNAC;
                     } else if (spiritTypeSelection.equals(getString(R.string.spirit_type_liqeur))) {
                         mSpiritType = ItemEntry.SPIRIT_TYPE_LIQEUR;
+                    } else if (spiritTypeSelection.equals(getString(R.string.spirit_type_vodka))) {
+                        mSpiritType = ItemEntry.SPIRIT_TYPE_VODKA;
                     } else {
                         mSpiritType = ItemEntry.SPIRIT_TYPE_UNKNOWN;
                     }
@@ -1186,7 +1191,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return false;
             } else {
                 // Otherwise, the insertion was successful and we can display a success toast
-                Toast.makeText(this, R.string.editor_insert_item_success, Toast.LENGTH_SHORT).show();
+                // Double toast, other one is in ItemProvider
+                //Toast.makeText(this, R.string.editor_insert_item_success, Toast.LENGTH_SHORT).show();
             }
         }
         // Reset photo member variables after saving

@@ -131,6 +131,9 @@ public class ItemCursorAdapter extends CursorAdapter {
             case ItemEntry.SPIRIT_TYPE_VERMOUTH:
                 spiritTypeString = context.getString(R.string.spirit_type_vermouth);
                 break;
+            case ItemEntry.SPIRIT_TYPE_VODKA:
+                spiritTypeString = context.getString(R.string.spirit_type_vodka);
+                break;
             case ItemEntry.SPIRIT_TYPE_WHISKEY:
                 spiritTypeString = context.getString(R.string.spirit_type_whiskey);
                 break;
@@ -245,7 +248,7 @@ public class ItemCursorAdapter extends CursorAdapter {
                     values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity - 1);
                     // Call update method through contentResolver passing in new values
                     int rowsUpdated = v.getContext().getContentResolver().update(ItemEntry.CONTENT_URI, values, selection, selectionArgs);
-                    // If update successful, show a toast or something
+                    // If update successful, show a toast
                     if (rowsUpdated == 1) {
                         // Notify listener that data has changed
                         Uri uri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, position + 1);
@@ -279,7 +282,7 @@ public class ItemCursorAdapter extends CursorAdapter {
                         values.put(ItemEntry.COLUMN_ITEM_QUANTITY, quantity + 1);
                         // Call update method through contentResolver passing in new values
                         int rowsUpdated = v.getContext().getContentResolver().update(ItemEntry.CONTENT_URI, values, selection, selectionArgs);
-                        // If update successful, show a toast or something
+                        // If update successful, show a toast
                         if (rowsUpdated == 1) {
                             // Notify listener that data has changed
                             Uri uri = ContentUris.withAppendedId(ItemEntry.CONTENT_URI, position + 1);

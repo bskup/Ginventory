@@ -71,16 +71,17 @@ public class ItemContract extends AppCompatActivity {
         // Possible values for spirit type
         public static final int SPIRIT_TYPE_UNKNOWN = 0;
         public static final int SPIRIT_TYPE_BEER = 1;
-        public static final int SPIRIT_TYPE_WINE = 2;
+        public static final int SPIRIT_TYPE_BRANDY = 2;
         public static final int SPIRIT_TYPE_CHAMPAGNE = 3;
-        public static final int SPIRIT_TYPE_GIN = 4;
-        public static final int SPIRIT_TYPE_RUM = 5;
-        public static final int SPIRIT_TYPE_TEQUILA = 6;
-        public static final int SPIRIT_TYPE_WHISKEY = 7;
-        public static final int SPIRIT_TYPE_VERMOUTH = 8;
-        public static final int SPIRIT_TYPE_BRANDY = 9;
-        public static final int SPIRIT_TYPE_COGNAC = 10;
-        public static final int SPIRIT_TYPE_LIQEUR = 11;
+        public static final int SPIRIT_TYPE_COGNAC = 4;
+        public static final int SPIRIT_TYPE_GIN = 5;
+        public static final int SPIRIT_TYPE_LIQEUR = 6;
+        public static final int SPIRIT_TYPE_RUM = 7;
+        public static final int SPIRIT_TYPE_TEQUILA = 8;
+        public static final int SPIRIT_TYPE_VERMOUTH = 9;
+        public static final int SPIRIT_TYPE_VODKA = 10;
+        public static final int SPIRIT_TYPE_WHISKEY = 11;
+        public static final int SPIRIT_TYPE_WINE = 12;
         // Possible values for size type
         public static final int SIZE_TYPE_ML = 0;
         public static final int SIZE_TYPE_OZ = 1;
@@ -93,7 +94,7 @@ public class ItemContract extends AppCompatActivity {
                     || spiritTypeToCheck == SPIRIT_TYPE_GIN || spiritTypeToCheck == SPIRIT_TYPE_RUM
                     || spiritTypeToCheck == SPIRIT_TYPE_TEQUILA || spiritTypeToCheck == SPIRIT_TYPE_WHISKEY
                     || spiritTypeToCheck == SPIRIT_TYPE_VERMOUTH || spiritTypeToCheck == SPIRIT_TYPE_BRANDY
-                    || spiritTypeToCheck == SPIRIT_TYPE_COGNAC || spiritTypeToCheck == SPIRIT_TYPE_LIQEUR) {
+                    || spiritTypeToCheck == SPIRIT_TYPE_COGNAC || spiritTypeToCheck == SPIRIT_TYPE_LIQEUR || spiritTypeToCheck == SPIRIT_TYPE_VODKA) {
                 return true;
             } else {
                 return false;

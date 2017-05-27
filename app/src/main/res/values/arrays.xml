@@ -12,6 +12,7 @@
         <item>@string/spirit_type_rum</item>
         <item>@string/spirit_type_tequila</item>
         <item>@string/spirit_type_vermouth</item>
+        <item>@string/spirit_type_vodka</item>
         <item>@string/spirit_type_whiskey</item>
         <item>@string/spirit_type_wine</item>
     </string-array>
