@@ -1,7 +1,7 @@
-# ginventory
-Android Basics Nanodegree final project - Ginventory
+# Gin Box - Liquor Inventory
+Android Basics Nanodegree final project - Gin Box - Liquor Inventory
 
-Ginventory manages your inventory of spirits and other alcoholic beverages.
+Gin Box manages your inventory of beer, wine, and spirits.
 
 Keep track of product information including product name, stock levels, supplier info, alcohol by volume, country of origin, and more.
 
