@@ -211,15 +211,15 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
     protected void onResume() {
         super.onResume();
         Log.v(LOG_TAG, "onResume called");
-        Log.v(LOG_TAG, "GinventoryPreferenceFragment.mPreferencesChanged: " + SettingsActivity.GinventoryPreferenceFragment.mPreferencesChanged);
-        if (SettingsActivity.GinventoryPreferenceFragment.mPreferencesChanged != null) {
-            if (SettingsActivity.GinventoryPreferenceFragment.mPreferencesChanged) {
+        Log.v(LOG_TAG, "GinboxPreferenceFragment.mPreferencesChanged: " + SettingsActivity.GinboxPreferenceFragment.mPreferencesChanged);
+        if (SettingsActivity.GinboxPreferenceFragment.mPreferencesChanged != null) {
+            if (SettingsActivity.GinboxPreferenceFragment.mPreferencesChanged) {
                 // Restart the loader
                 getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
                 // Recreate activity with new preferences applied
                 recreate();
                 Log.v(LOG_TAG, "recreate() called from onResume, setting mPreferencesChanged to false");
-                SettingsActivity.GinventoryPreferenceFragment.mPreferencesChanged = false;
+                SettingsActivity.GinboxPreferenceFragment.mPreferencesChanged = false;
             }
         }
     }

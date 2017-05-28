@@ -1,6 +1,10 @@
 package com.bskup.ginbox;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -29,23 +33,39 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     // Preference fragment
-    public static class GinventoryPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
+    public static class GinboxPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
         // Boolean whether preferences have changed or not
         public static Boolean mPreferencesChanged = false;
+
+        private Context mContext;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            mContext = getActivity().getApplicationContext();
             Log.v(LOG_TAG, "mPreferencesChanged in oncreate: " + mPreferencesChanged);
             addPreferencesFromResource(R.xml.settings_main);
             // Find the shared preferences and set listener on them
-            // Listen for change of the theme preference
+            // Listen for change of the theme and warning threshold preferences
             SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
             sharedPreferences.registerOnSharedPreferenceChangeListener(this);
             Preference warningThreshold = findPreference(getString(R.string.settings_warning_threshold_key));
             bindPreferenceSummaryToValue(warningThreshold);
             Preference theme = findPreference(getString(R.string.settings_theme_key));
             bindPreferenceSummaryToValue(theme);
+            // Open privacy policy when clicked
+            Preference privacyPolicy = findPreference(getString(R.string.settings_privacy_policy_key));
+            privacyPolicy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Uri privacyPolicyUri = Uri.parse(mContext.getString(R.string.privacy_policy_url));
+                    Intent openPrivacyPolicy = new Intent(Intent.ACTION_VIEW, privacyPolicyUri);
+                    if (openPrivacyPolicy.resolveActivity(mContext.getPackageManager()) != null) {
+                        startActivity(openPrivacyPolicy);
+                    }
+                    return true;
+                }
+            });
         }
 
         @Override

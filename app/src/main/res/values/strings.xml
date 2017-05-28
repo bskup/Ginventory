@@ -54,7 +54,7 @@
     <string name="settings_menu_item">Settings</string>
     <string name="settings_warning_threshold_default">25</string>
     <string name="settings_warning_threshold_key">warning_threshold</string>
-    <string name="settings_warning_threshold_label">Warning Threshold %</string>
+    <string name="settings_warning_threshold_label">Warning threshold %</string>
     <string name="settings_theme_label">Theme</string>
     <string name="settings_theme_key">theme</string>
     <string name="settings_theme_light_label">Light theme</string>
@@ -124,5 +124,8 @@
     <string name="create_file_name_divider">_</string>
     <string name="create_file_name_extension">.jpg</string>
     <string name="open_full_size_photo_intent_data_type">image/*</string>
+    <string name="settings_privacy_policy_label">Privacy policy</string>
+    <string name="settings_privacy_policy_key">privacy_policy</string>
+    <string name="privacy_policy_url">https://bskup.github.io/privacypolicy.html</string>
 
 </resources>
