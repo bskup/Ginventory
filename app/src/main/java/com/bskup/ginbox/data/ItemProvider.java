@@ -1,4 +1,4 @@
-package com.bskup.ginventory.data;
+package com.bskup.ginbox.data;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -10,10 +10,9 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bskup.ginventory.data.ItemContract.ItemEntry;
+import com.bskup.ginbox.data.ItemContract.ItemEntry;
 
 import static android.R.attr.id;
-import static android.R.attr.value;
 
 public class ItemProvider extends ContentProvider {
     // Tag for log messages

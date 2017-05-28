@@ -1,4 +1,4 @@
-package com.bskup.ginventory;
+package com.bskup.ginbox;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -23,7 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bskup.ginventory.data.ItemContract.ItemEntry;
+import com.bskup.ginbox.data.ItemContract.ItemEntry;
 
 import java.io.File;
 import java.util.Locale;

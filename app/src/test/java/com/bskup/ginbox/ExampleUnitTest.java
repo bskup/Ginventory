@@ -1,4 +1,4 @@
-package com.bskup.ginventory;
+package com.bskup.ginbox;
 
 import org.junit.Test;
 

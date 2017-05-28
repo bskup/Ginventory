@@ -1,12 +1,12 @@
-package com.bskup.ginventory.data;
+package com.bskup.ginbox.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.bskup.ginventory.data.ItemContract.ItemEntry;
+import com.bskup.ginbox.data.ItemContract.ItemEntry;
 
-// Manages database creation and version management for ginventory app
+// Manages database creation and version management for ginbox app
 public class ItemDbHelper extends SQLiteOpenHelper {
     // Name of inventory items database file
     private static final String INVENTORY_ITEMS_DATABASE_FILE_NAME = "inventory.db";

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.bskup.ginventory">
+          package="com.bskup.ginbox">
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission
@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppThemeLight">
-        <activity android:name=".CatalogActivity">
+        <activity android:name="com.bskup.ginbox.CatalogActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,28 +21,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EditorActivity"
-            android:parentActivityName=".CatalogActivity"
+            android:name="com.bskup.ginbox.EditorActivity"
+            android:parentActivityName="com.bskup.ginbox.CatalogActivity"
             android:theme="@style/EditorTheme">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".CatalogActivity"/>
+                android:value="com.bskup.ginbox.CatalogActivity"/>
         </activity>
-        <activity android:name="com.bskup.ginventory.SettingsActivity"
+        <activity android:name="com.bskup.ginbox.SettingsActivity"
                   android:label="@string/settings_title">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bskup.ginventory.CatalogActivity"/>
+                android:value="com.bskup.ginbox.CatalogActivity"/>
         </activity>
 
         <provider
-            android:name=".data.ItemProvider"
-            android:authorities="com.bskup.ginventory"
+            android:name="com.bskup.ginbox.data.ItemProvider"
+            android:authorities="com.bskup.ginbox"
             android:exported="false"/>
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.bskup.ginventory.fileprovider"
+            android:authorities="com.bskup.ginbox.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

@@ -1,4 +1,4 @@
-package com.bskup.ginventory;
+package com.bskup.ginbox;
 
 import android.Manifest;
 import android.content.ContentUris;
@@ -23,7 +23,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -44,15 +43,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bskup.ginventory.data.ItemContract.ItemEntry;
+import com.bskup.ginbox.data.ItemContract.ItemEntry;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import static android.R.attr.name;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     // Tag for log messages
@@ -828,7 +825,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     // Helper method to create a File with collision free name to store full size image in
-    // Saves in /Android/data/com.bskup.ginventory/files/Pictures
+    // Saves in /Android/data/com.bskup.ginbox/files/Pictures
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat(getString(R.string.create_file_date_time_format), Locale.US).format(new Date());

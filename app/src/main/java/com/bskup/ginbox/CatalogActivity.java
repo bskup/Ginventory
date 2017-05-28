@@ -1,4 +1,4 @@
-package com.bskup.ginventory;
+package com.bskup.ginbox;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -22,9 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.bskup.ginventory.data.ItemContract.ItemEntry;
-
-import static android.support.v7.widget.AppCompatDrawableManager.get;
+import com.bskup.ginbox.data.ItemContract.ItemEntry;
 
 public class CatalogActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 

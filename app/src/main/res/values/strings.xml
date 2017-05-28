@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ginventory</string>
+    <string name="app_name">Gin Box</string>
     <string name="empty_view_title_text">No inventory yet…</string>
     <string name="empty_view_subtitle_text">Add an item to get started!</string>
     <string name="delete_all_dialog_msg">Are you sure you want to delete all items?</string>

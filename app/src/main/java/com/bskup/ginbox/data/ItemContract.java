@@ -1,18 +1,14 @@
-package com.bskup.ginventory.data;
+package com.bskup.ginbox.data;
 
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import static android.text.style.TtsSpan.GENDER_FEMALE;
-import static android.text.style.TtsSpan.GENDER_MALE;
 
 public class ItemContract extends AppCompatActivity {
 
     // Content authority
-    public static final String CONTENT_AUTHORITY = "com.bskup.ginventory";
+    public static final String CONTENT_AUTHORITY = "com.bskup.ginbox";
     // Base content Uri
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     // Path to inventory items table

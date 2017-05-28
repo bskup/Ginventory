@@ -1,4 +1,4 @@
-package com.bskup.ginventory;
+package com.bskup.ginbox;
 
 import android.content.SharedPreferences;
 import android.preference.ListPreference;
