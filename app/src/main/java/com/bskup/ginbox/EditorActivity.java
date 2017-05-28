@@ -760,6 +760,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             mViewPhotoFullSizeAndDeletePhotoRelativeLayout.setVisibility(View.VISIBLE);
             mViewPhotoFullSizeImageView.setOnClickListener(mOpenFullSizePhotoClickListener);
             mDeletePhotoImageView.setOnClickListener(mDeletePhotoClickListener);
+        } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_CANCELED) {
+            Toast.makeText(EditorActivity.this, R.string.image_capture_cancelled, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -831,14 +833,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String timeStamp = new SimpleDateFormat(getString(R.string.create_file_date_time_format), Locale.US).format(new Date());
         String imageFileName = getString(R.string.create_file_name_prefix) + timeStamp + getString(R.string.create_file_name_divider);
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
+        return File.createTempFile(
                 imageFileName,  /* prefix */
                 getString(R.string.create_file_name_extension),         /* suffix */
                 storageDir      /* directory */
         );
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+        //mCurrentPhotoPath = image.getAbsolutePath();
+        //return image;
     }
 
     // Helper method to set up spinners
@@ -1096,9 +1098,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         } else {
             // Parse sale price and multiply by 100 to convert to cents to store as whole numbers
             salePriceAsDouble = Double.valueOf(salePriceString);
-            Log.e(LOG_TAG, "salePriceAsDouble in saveItem: " + salePriceAsDouble);
+            Log.v(LOG_TAG, "salePriceAsDouble in saveItem: " + salePriceAsDouble);
             salePriceAsCents = Double.valueOf(salePriceAsDouble * 100.0).longValue();
-            Log.e(LOG_TAG, "salePriceAsCents in saveItem: " + salePriceAsCents);
+            Log.v(LOG_TAG, "salePriceAsCents in saveItem: " + salePriceAsCents);
         }
         // Set error msg if supplier name left blank by user, otherwise parse it from
         // the String we pull from the EditText field
@@ -1187,9 +1189,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 Toast.makeText(this, R.string.editor_insert_item_error, Toast.LENGTH_SHORT).show();
                 return false;
             } else {
-                // Otherwise, the insertion was successful and we can display a success toast
+                // Otherwise, the insertion was successful and we can display a success message
                 // Double toast, other one is in ItemProvider
                 //Toast.makeText(this, R.string.editor_insert_item_success, Toast.LENGTH_SHORT).show();
+                Log.v(LOG_TAG, "Item insert success");
             }
         }
         // Reset photo member variables after saving
